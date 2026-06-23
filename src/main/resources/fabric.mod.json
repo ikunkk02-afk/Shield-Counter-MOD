@@ -18,6 +18,9 @@
 		"main": [
 			"io.github.ikunkk02.shieldcounter.ShieldCounter"
 		],
+		"cardinal-components": [
+			"io.github.ikunkk02.shieldcounter.charge.ShieldChargeComponents"
+		],
 		"client": [
 			"io.github.ikunkk02.shieldcounter.client.ShieldCounterClient"
 		],
@@ -40,9 +43,16 @@
 		"minecraft": "~1.21.1",
 		"java": ">=21",
 		"fabric-api": "*",
-		"cloth-config": ">=15.0.140"
+		"cloth-config": ">=15.0.140",
+		"cardinal-components-base": ">=6.1.3",
+		"cardinal-components-entity": ">=6.1.3"
 	},
 	"suggests": {
 		"modmenu": ">=11.0.4"
+	},
+	"custom": {
+		"cardinal-components": [
+			"shield-counter:shield_charge"
+		]
 	}
 }

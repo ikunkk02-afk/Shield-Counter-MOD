@@ -42,6 +42,7 @@ public final class ShieldCounterConfigManager {
 			}
 
 			current = loaded.validatedCopy();
+			writeConfig(current, configPath);
 		} catch (Exception exception) {
 			ShieldCounter.LOGGER.error("Failed to load {}, restoring defaults", configPath, exception);
 			ShieldCounterConfig defaults = new ShieldCounterConfig();

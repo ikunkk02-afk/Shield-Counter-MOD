@@ -48,6 +48,32 @@ class ShieldCounterConfigManagerTest {
 	}
 
 	@Test
+	void oldConfigGainsDefaultChargeFieldsAndIsRewritten() throws IOException {
+		Path configPath = tempDir.resolve("shield_counter.json");
+		Files.writeString(configPath, """
+			{
+			  "enableFallShieldBlock": true,
+			  "fallDamageReduction": 0.5,
+			  "durabilityCostMultiplier": 1.0,
+			  "requireShieldRaiseTime": true,
+			  "minShieldRaiseTicks": 10
+			}
+			""");
+
+		ShieldCounterConfigManager.load(configPath);
+		ShieldCounterConfig config = ShieldCounterConfigManager.get();
+		String rewritten = Files.readString(configPath);
+
+		assertTrue(config.enableShieldCharge);
+		assertEquals(60, config.maxShieldChargeTicks);
+		assertEquals(20, config.chargeStageOneTicks);
+		assertEquals(40, config.chargeStageTwoTicks);
+		assertEquals(60, config.chargeStageThreeTicks);
+		assertTrue(rewritten.contains("\"enableShieldCharge\": true"));
+		assertTrue(rewritten.contains("\"chargeStageThreeTicks\": 60"));
+	}
+
+	@Test
 	void malformedFileFallsBackToDefaultsAndIsRewritten() throws IOException {
 		Path configPath = tempDir.resolve("shield_counter.json");
 		Files.writeString(configPath, "{ definitely not valid json");

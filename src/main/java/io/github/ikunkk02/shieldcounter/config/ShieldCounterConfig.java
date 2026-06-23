@@ -12,12 +12,25 @@ public class ShieldCounterConfig {
 	public static final int DEFAULT_MIN_SHIELD_RAISE_TICKS = 10;
 	public static final int MIN_SHIELD_RAISE_TICKS = 0;
 	public static final int MAX_SHIELD_RAISE_TICKS = 60;
+	public static final boolean DEFAULT_ENABLE_SHIELD_CHARGE = true;
+	public static final int DEFAULT_MAX_SHIELD_CHARGE_TICKS = 60;
+	public static final int MIN_MAX_SHIELD_CHARGE_TICKS = 20;
+	public static final int MAX_MAX_SHIELD_CHARGE_TICKS = 200;
+	public static final int DEFAULT_CHARGE_STAGE_ONE_TICKS = 20;
+	public static final int DEFAULT_CHARGE_STAGE_TWO_TICKS = 40;
+	public static final int DEFAULT_CHARGE_STAGE_THREE_TICKS = 60;
+	public static final int MIN_CHARGE_STAGE_TICKS = 1;
 
 	public boolean enableFallShieldBlock = DEFAULT_ENABLE_FALL_SHIELD_BLOCK;
 	public double fallDamageReduction = DEFAULT_FALL_DAMAGE_REDUCTION;
 	public double durabilityCostMultiplier = DEFAULT_DURABILITY_COST_MULTIPLIER;
 	public boolean requireShieldRaiseTime = DEFAULT_REQUIRE_SHIELD_RAISE_TIME;
 	public int minShieldRaiseTicks = DEFAULT_MIN_SHIELD_RAISE_TICKS;
+	public boolean enableShieldCharge = DEFAULT_ENABLE_SHIELD_CHARGE;
+	public int maxShieldChargeTicks = DEFAULT_MAX_SHIELD_CHARGE_TICKS;
+	public int chargeStageOneTicks = DEFAULT_CHARGE_STAGE_ONE_TICKS;
+	public int chargeStageTwoTicks = DEFAULT_CHARGE_STAGE_TWO_TICKS;
+	public int chargeStageThreeTicks = DEFAULT_CHARGE_STAGE_THREE_TICKS;
 
 	public ShieldCounterConfig validatedCopy() {
 		ShieldCounterConfig validated = new ShieldCounterConfig();
@@ -39,6 +52,27 @@ public class ShieldCounterConfig {
 			this.minShieldRaiseTicks,
 			MIN_SHIELD_RAISE_TICKS,
 			MAX_SHIELD_RAISE_TICKS
+		);
+		validated.enableShieldCharge = this.enableShieldCharge;
+		validated.maxShieldChargeTicks = Math.clamp(
+			this.maxShieldChargeTicks,
+			MIN_MAX_SHIELD_CHARGE_TICKS,
+			MAX_MAX_SHIELD_CHARGE_TICKS
+		);
+		validated.chargeStageOneTicks = Math.clamp(
+			this.chargeStageOneTicks,
+			MIN_CHARGE_STAGE_TICKS,
+			validated.maxShieldChargeTicks - 2
+		);
+		validated.chargeStageTwoTicks = Math.clamp(
+			this.chargeStageTwoTicks,
+			validated.chargeStageOneTicks + 1,
+			validated.maxShieldChargeTicks - 1
+		);
+		validated.chargeStageThreeTicks = Math.clamp(
+			this.chargeStageThreeTicks,
+			validated.chargeStageTwoTicks + 1,
+			validated.maxShieldChargeTicks
 		);
 		return validated;
 	}
@@ -82,6 +116,20 @@ public class ShieldCounterConfig {
 			MAX_SHIELD_RAISE_TICKS
 		);
 		return itemUseTicks >= requiredTicks;
+	}
+
+	public int getShieldChargeLevel(int shieldChargeTicks) {
+		int ticks = Math.max(0, shieldChargeTicks);
+		if (ticks >= this.chargeStageThreeTicks) {
+			return 3;
+		}
+		if (ticks >= this.chargeStageTwoTicks) {
+			return 2;
+		}
+		if (ticks >= this.chargeStageOneTicks) {
+			return 1;
+		}
+		return 0;
 	}
 
 	private static double validateFiniteRange(double value, double defaultValue, double minimum, double maximum) {

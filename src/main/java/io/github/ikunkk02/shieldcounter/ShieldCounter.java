@@ -1,5 +1,6 @@
 package io.github.ikunkk02.shieldcounter;
 
+import io.github.ikunkk02.shieldcounter.charge.ShieldChargeEvents;
 import io.github.ikunkk02.shieldcounter.config.ShieldCounterConfigManager;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -17,6 +18,7 @@ public class ShieldCounter implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ShieldCounterConfigManager.load();
+		ShieldChargeEvents.register();
 		LOGGER.info("Shield Counter initialized");
 	}
 
