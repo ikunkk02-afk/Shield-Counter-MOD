@@ -1,12 +1,13 @@
 package io.github.ikunkk02.shieldcounter.mixin;
 
+import io.github.ikunkk02.shieldcounter.config.ShieldCounterConfig;
+import io.github.ikunkk02.shieldcounter.config.ShieldCounterConfigManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -14,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin {
-	private static final float SHIELD_FALL_DAMAGE_MULTIPLIER = 0.5F;
-
 	@ModifyArgs(
 		method = "damage",
 		at = @At(
@@ -27,9 +26,11 @@ public abstract class PlayerEntityMixin {
 		PlayerEntity player = (PlayerEntity) (Object) this;
 		DamageSource source = args.get(0);
 		float amount = args.get(1);
+		ShieldCounterConfig config = ShieldCounterConfigManager.get();
 
 		if (player.getWorld().isClient()
 			|| player.isCreative()
+			|| !config.enableFallShieldBlock
 			|| amount <= 0.0F
 			|| !source.isIn(DamageTypeTags.IS_FALL)
 			|| !player.isUsingItem()) {
@@ -41,9 +42,16 @@ public abstract class PlayerEntityMixin {
 			return;
 		}
 
-		float reducedAmount = amount * SHIELD_FALL_DAMAGE_MULTIPLIER;
-		int durabilityDamage = Math.max(1, MathHelper.ceil(amount - reducedAmount));
-		activeItem.damage(durabilityDamage, player, LivingEntity.getSlotForHand(player.getActiveHand()));
+		if (!config.isRaiseTimeSatisfied(player.getItemUseTime())) {
+			return;
+		}
+
+		float reducedAmount = config.calculateReducedDamage(amount);
+		float preventedDamage = amount - reducedAmount;
+		int durabilityDamage = config.calculateDurabilityCost(preventedDamage);
+		if (durabilityDamage > 0) {
+			activeItem.damage(durabilityDamage, player, LivingEntity.getSlotForHand(player.getActiveHand()));
+		}
 		args.set(1, reducedAmount);
 	}
 }

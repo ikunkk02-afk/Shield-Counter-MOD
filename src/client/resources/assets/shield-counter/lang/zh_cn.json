@@ -1,0 +1,14 @@
+{
+	"title.shield-counter.config": "盾牌缓冲配置",
+	"category.shield-counter.fall_shield": "盾牌摔落减伤",
+	"option.shield-counter.enable_fall_shield_block": "启用摔落伤害格挡",
+	"option.shield-counter.enable_fall_shield_block.tooltip": "允许正在举起的盾牌减少摔落伤害。",
+	"option.shield-counter.fall_damage_reduction": "摔落伤害减免比例",
+	"option.shield-counter.fall_damage_reduction.tooltip": "减少的摔落伤害比例。0.5 表示减少 50%。",
+	"option.shield-counter.durability_cost_multiplier": "耐久消耗倍率",
+	"option.shield-counter.durability_cost_multiplier.tooltip": "根据减免的伤害调整盾牌耐久消耗。设为 0 时不消耗耐久。",
+	"option.shield-counter.require_shield_raise_time": "要求提前举盾",
+	"option.shield-counter.require_shield_raise_time.tooltip": "盾牌必须举起足够时间后才能减少摔落伤害。",
+	"option.shield-counter.min_shield_raise_ticks": "最少举盾 Tick",
+	"option.shield-counter.min_shield_raise_ticks.tooltip": "盾牌最少持续使用时间。20 tick 等于 1 秒。"
+}

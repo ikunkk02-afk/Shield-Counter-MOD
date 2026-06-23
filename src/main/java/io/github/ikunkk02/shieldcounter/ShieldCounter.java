@@ -1,9 +1,8 @@
 package io.github.ikunkk02.shieldcounter;
 
+import io.github.ikunkk02.shieldcounter.config.ShieldCounterConfigManager;
 import net.fabricmc.api.ModInitializer;
-
 import net.minecraft.util.Identifier;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +16,8 @@ public class ShieldCounter implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-
-		LOGGER.info("Hello Fabric world!");
+		ShieldCounterConfigManager.load();
+		LOGGER.info("Shield Counter initialized");
 	}
 
 	public static Identifier id(String path) {

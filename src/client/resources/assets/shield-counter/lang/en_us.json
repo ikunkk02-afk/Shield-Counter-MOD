@@ -1,0 +1,14 @@
+{
+	"title.shield-counter.config": "Shield Counter Configuration",
+	"category.shield-counter.fall_shield": "Shield Fall Damage",
+	"option.shield-counter.enable_fall_shield_block": "Enable Fall Damage Blocking",
+	"option.shield-counter.enable_fall_shield_block.tooltip": "Allows an actively raised shield to reduce fall damage.",
+	"option.shield-counter.fall_damage_reduction": "Fall Damage Reduction",
+	"option.shield-counter.fall_damage_reduction.tooltip": "Fraction of fall damage prevented. 0.5 means 50%.",
+	"option.shield-counter.durability_cost_multiplier": "Durability Cost Multiplier",
+	"option.shield-counter.durability_cost_multiplier.tooltip": "Multiplies shield durability loss based on prevented damage. 0 disables durability loss.",
+	"option.shield-counter.require_shield_raise_time": "Require Shield Raise Time",
+	"option.shield-counter.require_shield_raise_time.tooltip": "Requires the shield to be raised for a minimum time before reducing fall damage.",
+	"option.shield-counter.min_shield_raise_ticks": "Minimum Shield Raise Ticks",
+	"option.shield-counter.min_shield_raise_ticks.tooltip": "Minimum active shield-use time. 20 ticks equals 1 second."
+}

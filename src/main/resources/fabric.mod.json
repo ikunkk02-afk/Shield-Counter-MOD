@@ -21,6 +21,9 @@
 		"client": [
 			"io.github.ikunkk02.shieldcounter.client.ShieldCounterClient"
 		],
+		"modmenu": [
+			"io.github.ikunkk02.shieldcounter.client.config.ShieldCounterModMenu"
+		],
 		"fabric-datagen": [
 			"io.github.ikunkk02.shieldcounter.client.ShieldCounterDataGenerator"
 		]
@@ -36,6 +39,10 @@
 		"fabricloader": ">=0.19.3",
 		"minecraft": "~1.21.1",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"cloth-config": ">=15.0.140"
+	},
+	"suggests": {
+		"modmenu": ">=11.0.4"
 	}
 }
