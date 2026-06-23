@@ -3,13 +3,13 @@
 	"id": "shield-counter",
 	"version": "${version}",
 	"name": "Shield Counter",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Reduces fall damage by 50% while the player is actively using a shield.",
 	"authors": [
-		"Me!"
+		"ikunkk02-afk"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/ikunkk02-afk/Shield-Counter-MOD",
+		"sources": "https://github.com/ikunkk02-afk/Shield-Counter-MOD"
 	},
 	"license": "MIT",
 	"icon": "assets/shield-counter/icon.png",
