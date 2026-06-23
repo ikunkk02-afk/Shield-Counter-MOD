@@ -51,6 +51,26 @@ public class ShieldCounterConfig {
 	public static final double DEFAULT_COUNTER_KNOCKBACK_LEVEL3_FULL_CHARGE = 3.0;
 	public static final double MIN_COUNTER_KNOCKBACK = 0.0;
 	public static final double MAX_COUNTER_KNOCKBACK = 5.0;
+	public static final boolean DEFAULT_ENABLE_ENERGY_COUNTER = true;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL1_THRESHOLD = 20.0;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL2_THRESHOLD = 16.0;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL3_THRESHOLD = 12.0;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL1_MULTIPLIER = 1.5;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL2_MULTIPLIER = 2.0;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL3_MULTIPLIER = 3.0;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL1_MAX_STORED_DAMAGE = 30.0;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL2_MAX_STORED_DAMAGE = 40.0;
+	public static final double DEFAULT_ENERGY_COUNTER_LEVEL3_MAX_STORED_DAMAGE = 50.0;
+	public static final int DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL1 = 80;
+	public static final int DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL2 = 100;
+	public static final int DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL3 = 120;
+	public static final double MIN_ENERGY_COUNTER_DAMAGE_VALUE = 0.0;
+	public static final double MAX_ENERGY_COUNTER_DAMAGE_VALUE = 500.0;
+	public static final double MIN_ENERGY_COUNTER_MULTIPLIER = 0.0;
+	public static final double MAX_ENERGY_COUNTER_MULTIPLIER = 10.0;
+	public static final int MIN_ENERGY_COUNTER_COOLDOWN_TICKS = 0;
+	public static final int MAX_ENERGY_COUNTER_COOLDOWN_TICKS = 200;
+	public static final boolean DEFAULT_SHOW_ENERGY_COUNTER_MESSAGE = true;
 
 	public boolean enableFallShieldBlock = DEFAULT_ENABLE_FALL_SHIELD_BLOCK;
 	public double fallDamageReduction = DEFAULT_FALL_DAMAGE_REDUCTION;
@@ -79,6 +99,20 @@ public class ShieldCounterConfig {
 	public double counterLevel3BaseRatio = DEFAULT_COUNTER_LEVEL3_BASE_RATIO;
 	public double counterKnockbackLevel3Base = DEFAULT_COUNTER_KNOCKBACK_LEVEL3_BASE;
 	public double counterKnockbackLevel3FullCharge = DEFAULT_COUNTER_KNOCKBACK_LEVEL3_FULL_CHARGE;
+	public boolean enableEnergyCounter = DEFAULT_ENABLE_ENERGY_COUNTER;
+	public double energyCounterLevel1Threshold = DEFAULT_ENERGY_COUNTER_LEVEL1_THRESHOLD;
+	public double energyCounterLevel2Threshold = DEFAULT_ENERGY_COUNTER_LEVEL2_THRESHOLD;
+	public double energyCounterLevel3Threshold = DEFAULT_ENERGY_COUNTER_LEVEL3_THRESHOLD;
+	public double energyCounterLevel1Multiplier = DEFAULT_ENERGY_COUNTER_LEVEL1_MULTIPLIER;
+	public double energyCounterLevel2Multiplier = DEFAULT_ENERGY_COUNTER_LEVEL2_MULTIPLIER;
+	public double energyCounterLevel3Multiplier = DEFAULT_ENERGY_COUNTER_LEVEL3_MULTIPLIER;
+	public double energyCounterLevel1MaxStoredDamage = DEFAULT_ENERGY_COUNTER_LEVEL1_MAX_STORED_DAMAGE;
+	public double energyCounterLevel2MaxStoredDamage = DEFAULT_ENERGY_COUNTER_LEVEL2_MAX_STORED_DAMAGE;
+	public double energyCounterLevel3MaxStoredDamage = DEFAULT_ENERGY_COUNTER_LEVEL3_MAX_STORED_DAMAGE;
+	public int energyCounterCooldownLevel1 = DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL1;
+	public int energyCounterCooldownLevel2 = DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL2;
+	public int energyCounterCooldownLevel3 = DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL3;
+	public boolean showEnergyCounterMessage = DEFAULT_SHOW_ENERGY_COUNTER_MESSAGE;
 
 	public ShieldCounterConfig validatedCopy() {
 		ShieldCounterConfig validated = new ShieldCounterConfig();
@@ -188,6 +222,77 @@ public class ShieldCounterConfig {
 			MIN_COUNTER_KNOCKBACK,
 			MAX_COUNTER_KNOCKBACK
 		);
+		validated.enableEnergyCounter = this.enableEnergyCounter;
+		validated.energyCounterLevel1Threshold = validateFiniteRange(
+			this.energyCounterLevel1Threshold,
+			DEFAULT_ENERGY_COUNTER_LEVEL1_THRESHOLD,
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+		validated.energyCounterLevel2Threshold = validateFiniteRange(
+			this.energyCounterLevel2Threshold,
+			DEFAULT_ENERGY_COUNTER_LEVEL2_THRESHOLD,
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+		validated.energyCounterLevel3Threshold = validateFiniteRange(
+			this.energyCounterLevel3Threshold,
+			DEFAULT_ENERGY_COUNTER_LEVEL3_THRESHOLD,
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+		validated.energyCounterLevel1Multiplier = validateFiniteRange(
+			this.energyCounterLevel1Multiplier,
+			DEFAULT_ENERGY_COUNTER_LEVEL1_MULTIPLIER,
+			MIN_ENERGY_COUNTER_MULTIPLIER,
+			MAX_ENERGY_COUNTER_MULTIPLIER
+		);
+		validated.energyCounterLevel2Multiplier = validateFiniteRange(
+			this.energyCounterLevel2Multiplier,
+			DEFAULT_ENERGY_COUNTER_LEVEL2_MULTIPLIER,
+			MIN_ENERGY_COUNTER_MULTIPLIER,
+			MAX_ENERGY_COUNTER_MULTIPLIER
+		);
+		validated.energyCounterLevel3Multiplier = validateFiniteRange(
+			this.energyCounterLevel3Multiplier,
+			DEFAULT_ENERGY_COUNTER_LEVEL3_MULTIPLIER,
+			MIN_ENERGY_COUNTER_MULTIPLIER,
+			MAX_ENERGY_COUNTER_MULTIPLIER
+		);
+		validated.energyCounterLevel1MaxStoredDamage = validateFiniteRange(
+			this.energyCounterLevel1MaxStoredDamage,
+			DEFAULT_ENERGY_COUNTER_LEVEL1_MAX_STORED_DAMAGE,
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+		validated.energyCounterLevel2MaxStoredDamage = validateFiniteRange(
+			this.energyCounterLevel2MaxStoredDamage,
+			DEFAULT_ENERGY_COUNTER_LEVEL2_MAX_STORED_DAMAGE,
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+		validated.energyCounterLevel3MaxStoredDamage = validateFiniteRange(
+			this.energyCounterLevel3MaxStoredDamage,
+			DEFAULT_ENERGY_COUNTER_LEVEL3_MAX_STORED_DAMAGE,
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+		validated.energyCounterCooldownLevel1 = Math.clamp(
+			this.energyCounterCooldownLevel1,
+			MIN_ENERGY_COUNTER_COOLDOWN_TICKS,
+			MAX_ENERGY_COUNTER_COOLDOWN_TICKS
+		);
+		validated.energyCounterCooldownLevel2 = Math.clamp(
+			this.energyCounterCooldownLevel2,
+			MIN_ENERGY_COUNTER_COOLDOWN_TICKS,
+			MAX_ENERGY_COUNTER_COOLDOWN_TICKS
+		);
+		validated.energyCounterCooldownLevel3 = Math.clamp(
+			this.energyCounterCooldownLevel3,
+			MIN_ENERGY_COUNTER_COOLDOWN_TICKS,
+			MAX_ENERGY_COUNTER_COOLDOWN_TICKS
+		);
+		validated.showEnergyCounterMessage = this.showEnergyCounterMessage;
 		return validated;
 	}
 
@@ -264,6 +369,89 @@ public class ShieldCounterConfig {
 			MIN_SHIELD_CHARGE_COOLDOWN_TICKS,
 			MAX_SHIELD_CHARGE_COOLDOWN_TICKS
 		);
+	}
+
+	public double getEnergyCounterThreshold(int enchantmentLevel) {
+		if (!this.enableEnergyCounter || enchantmentLevel <= 0) {
+			return 0.0;
+		}
+		return Math.clamp(
+			this.selectEnergyCounterValue(
+				enchantmentLevel,
+				this.energyCounterLevel1Threshold,
+				this.energyCounterLevel2Threshold,
+				this.energyCounterLevel3Threshold
+			),
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+	}
+
+	public double getEnergyCounterMultiplier(int enchantmentLevel) {
+		if (!this.enableEnergyCounter || enchantmentLevel <= 0) {
+			return 0.0;
+		}
+		return Math.clamp(
+			this.selectEnergyCounterValue(
+				enchantmentLevel,
+				this.energyCounterLevel1Multiplier,
+				this.energyCounterLevel2Multiplier,
+				this.energyCounterLevel3Multiplier
+			),
+			MIN_ENERGY_COUNTER_MULTIPLIER,
+			MAX_ENERGY_COUNTER_MULTIPLIER
+		);
+	}
+
+	public double getEnergyCounterMaxStoredDamage(int enchantmentLevel) {
+		if (!this.enableEnergyCounter || enchantmentLevel <= 0) {
+			return 0.0;
+		}
+		return Math.clamp(
+			this.selectEnergyCounterValue(
+				enchantmentLevel,
+				this.energyCounterLevel1MaxStoredDamage,
+				this.energyCounterLevel2MaxStoredDamage,
+				this.energyCounterLevel3MaxStoredDamage
+			),
+			MIN_ENERGY_COUNTER_DAMAGE_VALUE,
+			MAX_ENERGY_COUNTER_DAMAGE_VALUE
+		);
+	}
+
+	public int getEnergyCounterCooldownTicks(int enchantmentLevel) {
+		if (!this.enableEnergyCounter || enchantmentLevel <= 0) {
+			return 0;
+		}
+
+		int configuredTicks;
+		if (enchantmentLevel == 1) {
+			configuredTicks = this.energyCounterCooldownLevel1;
+		} else if (enchantmentLevel == 2) {
+			configuredTicks = this.energyCounterCooldownLevel2;
+		} else {
+			configuredTicks = this.energyCounterCooldownLevel3;
+		}
+		return Math.clamp(
+			configuredTicks,
+			MIN_ENERGY_COUNTER_COOLDOWN_TICKS,
+			MAX_ENERGY_COUNTER_COOLDOWN_TICKS
+		);
+	}
+
+	private double selectEnergyCounterValue(
+		int enchantmentLevel,
+		double levelOneValue,
+		double levelTwoValue,
+		double levelThreeValue
+	) {
+		if (enchantmentLevel == 1) {
+			return levelOneValue;
+		}
+		if (enchantmentLevel == 2) {
+			return levelTwoValue;
+		}
+		return levelThreeValue;
 	}
 
 	private static double validateFiniteRange(double value, double defaultValue, double minimum, double maximum) {

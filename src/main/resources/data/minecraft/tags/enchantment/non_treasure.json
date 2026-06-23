@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "shield-counter:shield_counter"
+    "shield-counter:shield_counter",
+    "shield-counter:energy_counter"
   ]
 }

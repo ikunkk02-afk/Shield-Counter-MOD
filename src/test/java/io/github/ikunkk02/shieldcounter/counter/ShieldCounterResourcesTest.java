@@ -28,6 +28,20 @@ class ShieldCounterResourcesTest {
 	}
 
 	@Test
+	void energyCounterIsAThreeLevelShieldOnlyDataDrivenEnchantment() throws IOException {
+		JsonObject enchantment = readJson(
+			RESOURCES.resolve("data/shield-counter/enchantment/energy_counter.json")
+		);
+
+		assertEquals(3, enchantment.get("max_level").getAsInt());
+		assertEquals("#shield-counter:enchantable/shield", enchantment.get("supported_items").getAsString());
+		assertEquals("#shield-counter:enchantable/shield", enchantment.get("primary_items").getAsString());
+		assertTrue(enchantment.getAsJsonArray("slots").contains(JsonParser.parseString("\"hand\"")));
+		assertEquals("enchantment.shield-counter.energy_counter",
+			enchantment.getAsJsonObject("description").get("translate").getAsString());
+	}
+
+	@Test
 	void enchantmentIsAvailableThroughTheNormalNonTreasurePools() throws IOException {
 		JsonObject tag = readJson(
 			RESOURCES.resolve("data/minecraft/tags/enchantment/non_treasure.json")
@@ -35,6 +49,9 @@ class ShieldCounterResourcesTest {
 
 		assertTrue(tag.getAsJsonArray("values").contains(
 			JsonParser.parseString("\"shield-counter:shield_counter\"")
+		));
+		assertTrue(tag.getAsJsonArray("values").contains(
+			JsonParser.parseString("\"shield-counter:energy_counter\"")
 		));
 	}
 

@@ -34,6 +34,20 @@ class ShieldCounterConfigTest {
 		assertEquals(1.00, config.counterLevel3BaseRatio);
 		assertEquals(1.2, config.counterKnockbackLevel3Base);
 		assertEquals(3.0, config.counterKnockbackLevel3FullCharge);
+		assertTrue(config.enableEnergyCounter);
+		assertEquals(20.0, config.energyCounterLevel1Threshold);
+		assertEquals(16.0, config.energyCounterLevel2Threshold);
+		assertEquals(12.0, config.energyCounterLevel3Threshold);
+		assertEquals(1.5, config.energyCounterLevel1Multiplier);
+		assertEquals(2.0, config.energyCounterLevel2Multiplier);
+		assertEquals(3.0, config.energyCounterLevel3Multiplier);
+		assertEquals(30.0, config.energyCounterLevel1MaxStoredDamage);
+		assertEquals(40.0, config.energyCounterLevel2MaxStoredDamage);
+		assertEquals(50.0, config.energyCounterLevel3MaxStoredDamage);
+		assertEquals(80, config.energyCounterCooldownLevel1);
+		assertEquals(100, config.energyCounterCooldownLevel2);
+		assertEquals(120, config.energyCounterCooldownLevel3);
+		assertTrue(config.showEnergyCounterMessage);
 	}
 
 	@Test
@@ -106,6 +120,10 @@ class ShieldCounterConfigTest {
 		config.shieldChargeCooldownLevel1 = -1;
 		config.shieldChargeCooldownLevel2 = 250;
 		config.shieldChargeCooldownLevel3 = 201;
+		config.energyCounterLevel1Threshold = -10.0;
+		config.energyCounterLevel2Multiplier = Double.POSITIVE_INFINITY;
+		config.energyCounterLevel3MaxStoredDamage = -5.0;
+		config.energyCounterCooldownLevel3 = 500;
 
 		ShieldCounterConfig validated = config.validatedCopy();
 
@@ -115,6 +133,10 @@ class ShieldCounterConfigTest {
 		assertEquals(0, validated.shieldChargeCooldownLevel1);
 		assertEquals(200, validated.shieldChargeCooldownLevel2);
 		assertEquals(200, validated.shieldChargeCooldownLevel3);
+		assertEquals(0.0, validated.energyCounterLevel1Threshold);
+		assertEquals(2.0, validated.energyCounterLevel2Multiplier);
+		assertEquals(0.0, validated.energyCounterLevel3MaxStoredDamage);
+		assertEquals(200, validated.energyCounterCooldownLevel3);
 
 		config.fallDamageReduction = -1.0;
 		config.durabilityCostMultiplier = 10.0;
@@ -122,6 +144,10 @@ class ShieldCounterConfigTest {
 		config.shieldChargeCooldownLevel1 = 12;
 		config.shieldChargeCooldownLevel2 = 34;
 		config.shieldChargeCooldownLevel3 = 56;
+		config.energyCounterLevel1Threshold = 11.0;
+		config.energyCounterLevel2Multiplier = 2.5;
+		config.energyCounterLevel3MaxStoredDamage = 45.0;
+		config.energyCounterCooldownLevel3 = 90;
 		validated = config.validatedCopy();
 
 		assertEquals(0.0, validated.fallDamageReduction);
@@ -130,6 +156,10 @@ class ShieldCounterConfigTest {
 		assertEquals(12, validated.shieldChargeCooldownLevel1);
 		assertEquals(34, validated.shieldChargeCooldownLevel2);
 		assertEquals(56, validated.shieldChargeCooldownLevel3);
+		assertEquals(11.0, validated.energyCounterLevel1Threshold);
+		assertEquals(2.5, validated.energyCounterLevel2Multiplier);
+		assertEquals(45.0, validated.energyCounterLevel3MaxStoredDamage);
+		assertEquals(90, validated.energyCounterCooldownLevel3);
 	}
 
 	@Test
@@ -140,6 +170,8 @@ class ShieldCounterConfigTest {
 		config.counterDurabilityCostMultiplier = Double.NaN;
 		config.counterLevel1BaseRatio = Double.NEGATIVE_INFINITY;
 		config.counterKnockbackLevel3FullCharge = Double.POSITIVE_INFINITY;
+		config.energyCounterLevel2Threshold = Double.NaN;
+		config.energyCounterLevel3Multiplier = Double.NEGATIVE_INFINITY;
 
 		ShieldCounterConfig validated = config.validatedCopy();
 
@@ -148,6 +180,8 @@ class ShieldCounterConfigTest {
 		assertEquals(1.0, validated.counterDurabilityCostMultiplier);
 		assertEquals(0.25, validated.counterLevel1BaseRatio);
 		assertEquals(3.0, validated.counterKnockbackLevel3FullCharge);
+		assertEquals(16.0, validated.energyCounterLevel2Threshold);
+		assertEquals(3.0, validated.energyCounterLevel3Multiplier);
 	}
 
 	@Test
@@ -232,5 +266,30 @@ class ShieldCounterConfigTest {
 		config.enableShieldChargeCooldown = false;
 
 		assertEquals(0, config.getShieldChargeCooldownTicks(3));
+	}
+
+	@Test
+	void selectsEnergyCounterValuesForLevel() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+
+		assertEquals(20.0, config.getEnergyCounterThreshold(1));
+		assertEquals(16.0, config.getEnergyCounterThreshold(2));
+		assertEquals(12.0, config.getEnergyCounterThreshold(3));
+		assertEquals(12.0, config.getEnergyCounterThreshold(99));
+		assertEquals(0.0, config.getEnergyCounterThreshold(0));
+		assertEquals(1.5, config.getEnergyCounterMultiplier(1));
+		assertEquals(2.0, config.getEnergyCounterMultiplier(2));
+		assertEquals(3.0, config.getEnergyCounterMultiplier(3));
+		assertEquals(30.0, config.getEnergyCounterMaxStoredDamage(1));
+		assertEquals(40.0, config.getEnergyCounterMaxStoredDamage(2));
+		assertEquals(50.0, config.getEnergyCounterMaxStoredDamage(3));
+		assertEquals(80, config.getEnergyCounterCooldownTicks(1));
+		assertEquals(100, config.getEnergyCounterCooldownTicks(2));
+		assertEquals(120, config.getEnergyCounterCooldownTicks(3));
+
+		config.enableEnergyCounter = false;
+
+		assertEquals(0.0, config.getEnergyCounterThreshold(3));
+		assertEquals(0, config.getEnergyCounterCooldownTicks(3));
 	}
 }
