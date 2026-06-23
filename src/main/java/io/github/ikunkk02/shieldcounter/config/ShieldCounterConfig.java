@@ -20,6 +20,13 @@ public class ShieldCounterConfig {
 	public static final int DEFAULT_CHARGE_STAGE_TWO_TICKS = 40;
 	public static final int DEFAULT_CHARGE_STAGE_THREE_TICKS = 60;
 	public static final int MIN_CHARGE_STAGE_TICKS = 1;
+	public static final boolean DEFAULT_ENABLE_SHIELD_CHARGE_COOLDOWN = true;
+	public static final int DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL1 = 40;
+	public static final int DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL2 = 50;
+	public static final int DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL3 = 60;
+	public static final int MIN_SHIELD_CHARGE_COOLDOWN_TICKS = 0;
+	public static final int MAX_SHIELD_CHARGE_COOLDOWN_TICKS = 200;
+	public static final boolean DEFAULT_SHOW_SHIELD_CHARGE_STATUS_MESSAGE = true;
 	public static final boolean DEFAULT_ENABLE_SHIELD_CHARGE_HUD = true;
 	public static final int DEFAULT_SHIELD_CHARGE_HUD_Y_OFFSET = 14;
 	public static final int MIN_SHIELD_CHARGE_HUD_Y_OFFSET = 0;
@@ -40,8 +47,8 @@ public class ShieldCounterConfig {
 	public static final double DEFAULT_COUNTER_LEVEL3_BASE_RATIO = 1.00;
 	public static final double MIN_COUNTER_RATIO = 0.0;
 	public static final double MAX_COUNTER_RATIO = 1.0;
-	public static final double DEFAULT_COUNTER_KNOCKBACK_LEVEL3_BASE = 0.6;
-	public static final double DEFAULT_COUNTER_KNOCKBACK_LEVEL3_FULL_CHARGE = 1.6;
+	public static final double DEFAULT_COUNTER_KNOCKBACK_LEVEL3_BASE = 1.2;
+	public static final double DEFAULT_COUNTER_KNOCKBACK_LEVEL3_FULL_CHARGE = 3.0;
 	public static final double MIN_COUNTER_KNOCKBACK = 0.0;
 	public static final double MAX_COUNTER_KNOCKBACK = 5.0;
 
@@ -55,6 +62,11 @@ public class ShieldCounterConfig {
 	public int chargeStageOneTicks = DEFAULT_CHARGE_STAGE_ONE_TICKS;
 	public int chargeStageTwoTicks = DEFAULT_CHARGE_STAGE_TWO_TICKS;
 	public int chargeStageThreeTicks = DEFAULT_CHARGE_STAGE_THREE_TICKS;
+	public boolean enableShieldChargeCooldown = DEFAULT_ENABLE_SHIELD_CHARGE_COOLDOWN;
+	public int shieldChargeCooldownLevel1 = DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL1;
+	public int shieldChargeCooldownLevel2 = DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL2;
+	public int shieldChargeCooldownLevel3 = DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL3;
+	public boolean showShieldChargeStatusMessage = DEFAULT_SHOW_SHIELD_CHARGE_STATUS_MESSAGE;
 	public boolean enableShieldChargeHud = DEFAULT_ENABLE_SHIELD_CHARGE_HUD;
 	public int shieldChargeHudYOffset = DEFAULT_SHIELD_CHARGE_HUD_Y_OFFSET;
 	public int shieldChargeHudWidth = DEFAULT_SHIELD_CHARGE_HUD_WIDTH;
@@ -110,6 +122,23 @@ public class ShieldCounterConfig {
 			validated.chargeStageTwoTicks + 1,
 			validated.maxShieldChargeTicks
 		);
+		validated.enableShieldChargeCooldown = this.enableShieldChargeCooldown;
+		validated.shieldChargeCooldownLevel1 = Math.clamp(
+			this.shieldChargeCooldownLevel1,
+			MIN_SHIELD_CHARGE_COOLDOWN_TICKS,
+			MAX_SHIELD_CHARGE_COOLDOWN_TICKS
+		);
+		validated.shieldChargeCooldownLevel2 = Math.clamp(
+			this.shieldChargeCooldownLevel2,
+			MIN_SHIELD_CHARGE_COOLDOWN_TICKS,
+			MAX_SHIELD_CHARGE_COOLDOWN_TICKS
+		);
+		validated.shieldChargeCooldownLevel3 = Math.clamp(
+			this.shieldChargeCooldownLevel3,
+			MIN_SHIELD_CHARGE_COOLDOWN_TICKS,
+			MAX_SHIELD_CHARGE_COOLDOWN_TICKS
+		);
+		validated.showShieldChargeStatusMessage = this.showShieldChargeStatusMessage;
 		validated.enableShieldChargeHud = this.enableShieldChargeHud;
 		validated.shieldChargeHudYOffset = Math.clamp(
 			this.shieldChargeHudYOffset,
@@ -146,12 +175,7 @@ public class ShieldCounterConfig {
 			MIN_COUNTER_RATIO,
 			MAX_COUNTER_RATIO
 		);
-		validated.counterLevel3BaseRatio = validateFiniteRange(
-			this.counterLevel3BaseRatio,
-			DEFAULT_COUNTER_LEVEL3_BASE_RATIO,
-			MIN_COUNTER_RATIO,
-			MAX_COUNTER_RATIO
-		);
+		validated.counterLevel3BaseRatio = DEFAULT_COUNTER_LEVEL3_BASE_RATIO;
 		validated.counterKnockbackLevel3Base = validateFiniteRange(
 			this.counterKnockbackLevel3Base,
 			DEFAULT_COUNTER_KNOCKBACK_LEVEL3_BASE,
@@ -220,6 +244,26 @@ public class ShieldCounterConfig {
 			return 1;
 		}
 		return 0;
+	}
+
+	public int getShieldChargeCooldownTicks(int enchantmentLevel) {
+		if (!this.enableShieldChargeCooldown || enchantmentLevel <= 0) {
+			return 0;
+		}
+
+		int configuredTicks;
+		if (enchantmentLevel == 1) {
+			configuredTicks = this.shieldChargeCooldownLevel1;
+		} else if (enchantmentLevel == 2) {
+			configuredTicks = this.shieldChargeCooldownLevel2;
+		} else {
+			configuredTicks = this.shieldChargeCooldownLevel3;
+		}
+		return Math.clamp(
+			configuredTicks,
+			MIN_SHIELD_CHARGE_COOLDOWN_TICKS,
+			MAX_SHIELD_CHARGE_COOLDOWN_TICKS
+		);
 	}
 
 	private static double validateFiniteRange(double value, double defaultValue, double minimum, double maximum) {

@@ -73,7 +73,15 @@ public abstract class ShieldBlockMixin {
 			return;
 		}
 
-		int chargeLevel = ShieldChargeApi.getShieldChargeLevel(player);
+		int chargeLevel = ShieldCounterRules.effectiveChargeLevel(
+			ShieldChargeApi.getShieldChargeLevel(player),
+			ShieldChargeApi.isShieldChargeOnCooldown(player)
+		);
+		int chargeCooldownTicks = ShieldCounterRules.calculateChargeCooldownTicks(
+			enchantmentLevel,
+			chargeLevel,
+			config
+		);
 		PendingShieldCounter pendingCounter = new PendingShieldCounter(
 			attacker,
 			amount,
@@ -81,8 +89,9 @@ public abstract class ShieldBlockMixin {
 			chargeLevel,
 			ShieldCounterRules.calculateReflectRatio(enchantmentLevel, chargeLevel, config),
 			ShieldCounterRules.calculateKnockback(enchantmentLevel, chargeLevel, config),
+			chargeCooldownTicks,
 			config.counterDurabilityCostMultiplier,
-			config.consumeChargeOnCounter
+			config.consumeChargeOnCounter || chargeLevel >= 3
 		);
 		((ShieldCounterPlayerAccess) player).shieldCounter$prepare(pendingCounter);
 	}
@@ -117,6 +126,10 @@ public abstract class ShieldBlockMixin {
 
 		if (pendingCounter.consumeCharge()) {
 			ShieldChargeApi.resetShieldCharge(player);
+		}
+
+		if (pendingCounter.chargeCooldownTicks() > 0) {
+			ShieldChargeApi.setShieldChargeCooldown(player, pendingCounter.chargeCooldownTicks());
 		}
 
 		serverWorld.playSound(
@@ -168,12 +181,12 @@ public abstract class ShieldBlockMixin {
 			return;
 		}
 
-		double x = attacker.getX() - player.getX();
-		double z = attacker.getZ() - player.getZ();
+		double x = player.getX() - attacker.getX();
+		double z = player.getZ() - attacker.getZ();
 		if (x * x + z * z < MIN_DIRECTION_LENGTH_SQUARED) {
 			Vec3d lookDirection = player.getRotationVec(1.0F);
-			x = lookDirection.x;
-			z = lookDirection.z;
+			x = -lookDirection.x;
+			z = -lookDirection.z;
 			if (x * x + z * z < MIN_DIRECTION_LENGTH_SQUARED) {
 				z = 1.0;
 			}

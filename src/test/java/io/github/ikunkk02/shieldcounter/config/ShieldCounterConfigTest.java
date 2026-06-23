@@ -21,14 +21,19 @@ class ShieldCounterConfigTest {
 		assertEquals(20, config.chargeStageOneTicks);
 		assertEquals(40, config.chargeStageTwoTicks);
 		assertEquals(60, config.chargeStageThreeTicks);
+		assertTrue(config.enableShieldChargeCooldown);
+		assertEquals(40, config.shieldChargeCooldownLevel1);
+		assertEquals(50, config.shieldChargeCooldownLevel2);
+		assertEquals(60, config.shieldChargeCooldownLevel3);
+		assertTrue(config.showShieldChargeStatusMessage);
 		assertTrue(config.enableShieldCounter);
 		assertTrue(config.consumeChargeOnCounter);
 		assertEquals(1.0, config.counterDurabilityCostMultiplier);
 		assertEquals(0.25, config.counterLevel1BaseRatio);
 		assertEquals(0.50, config.counterLevel2BaseRatio);
 		assertEquals(1.00, config.counterLevel3BaseRatio);
-		assertEquals(0.6, config.counterKnockbackLevel3Base);
-		assertEquals(1.6, config.counterKnockbackLevel3FullCharge);
+		assertEquals(1.2, config.counterKnockbackLevel3Base);
+		assertEquals(3.0, config.counterKnockbackLevel3FullCharge);
 	}
 
 	@Test
@@ -98,21 +103,33 @@ class ShieldCounterConfigTest {
 		config.fallDamageReduction = 2.0;
 		config.durabilityCostMultiplier = -1.0;
 		config.minShieldRaiseTicks = 100;
+		config.shieldChargeCooldownLevel1 = -1;
+		config.shieldChargeCooldownLevel2 = 250;
+		config.shieldChargeCooldownLevel3 = 201;
 
 		ShieldCounterConfig validated = config.validatedCopy();
 
 		assertEquals(0.95, validated.fallDamageReduction);
 		assertEquals(0.0, validated.durabilityCostMultiplier);
 		assertEquals(60, validated.minShieldRaiseTicks);
+		assertEquals(0, validated.shieldChargeCooldownLevel1);
+		assertEquals(200, validated.shieldChargeCooldownLevel2);
+		assertEquals(200, validated.shieldChargeCooldownLevel3);
 
 		config.fallDamageReduction = -1.0;
 		config.durabilityCostMultiplier = 10.0;
 		config.minShieldRaiseTicks = -5;
+		config.shieldChargeCooldownLevel1 = 12;
+		config.shieldChargeCooldownLevel2 = 34;
+		config.shieldChargeCooldownLevel3 = 56;
 		validated = config.validatedCopy();
 
 		assertEquals(0.0, validated.fallDamageReduction);
 		assertEquals(5.0, validated.durabilityCostMultiplier);
 		assertEquals(0, validated.minShieldRaiseTicks);
+		assertEquals(12, validated.shieldChargeCooldownLevel1);
+		assertEquals(34, validated.shieldChargeCooldownLevel2);
+		assertEquals(56, validated.shieldChargeCooldownLevel3);
 	}
 
 	@Test
@@ -130,7 +147,7 @@ class ShieldCounterConfigTest {
 		assertEquals(1.0, validated.durabilityCostMultiplier);
 		assertEquals(1.0, validated.counterDurabilityCostMultiplier);
 		assertEquals(0.25, validated.counterLevel1BaseRatio);
-		assertEquals(1.6, validated.counterKnockbackLevel3FullCharge);
+		assertEquals(3.0, validated.counterKnockbackLevel3FullCharge);
 	}
 
 	@Test
@@ -151,6 +168,11 @@ class ShieldCounterConfigTest {
 		assertEquals(1.0, validated.counterLevel3BaseRatio);
 		assertEquals(0.0, validated.counterKnockbackLevel3Base);
 		assertEquals(5.0, validated.counterKnockbackLevel3FullCharge);
+
+		config.counterLevel3BaseRatio = 0.25;
+		validated = config.validatedCopy();
+
+		assertEquals(1.0, validated.counterLevel3BaseRatio);
 	}
 
 	@Test
@@ -195,5 +217,20 @@ class ShieldCounterConfigTest {
 
 		config.requireShieldRaiseTime = false;
 		assertTrue(config.isRaiseTimeSatisfied(0));
+	}
+
+	@Test
+	void selectsShieldChargeCooldownForCounterLevel() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+
+		assertEquals(40, config.getShieldChargeCooldownTicks(1));
+		assertEquals(50, config.getShieldChargeCooldownTicks(2));
+		assertEquals(60, config.getShieldChargeCooldownTicks(3));
+		assertEquals(60, config.getShieldChargeCooldownTicks(99));
+		assertEquals(0, config.getShieldChargeCooldownTicks(0));
+
+		config.enableShieldChargeCooldown = false;
+
+		assertEquals(0, config.getShieldChargeCooldownTicks(3));
 	}
 }

@@ -69,18 +69,26 @@ class ShieldCounterConfigManagerTest {
 		assertEquals(20, config.chargeStageOneTicks);
 		assertEquals(40, config.chargeStageTwoTicks);
 		assertEquals(60, config.chargeStageThreeTicks);
+		assertTrue(config.enableShieldChargeCooldown);
+		assertEquals(40, config.shieldChargeCooldownLevel1);
+		assertEquals(50, config.shieldChargeCooldownLevel2);
+		assertEquals(60, config.shieldChargeCooldownLevel3);
+		assertTrue(config.showShieldChargeStatusMessage);
 		assertTrue(config.enableShieldCounter);
 		assertTrue(config.consumeChargeOnCounter);
 		assertEquals(1.0, config.counterDurabilityCostMultiplier);
 		assertEquals(0.25, config.counterLevel1BaseRatio);
 		assertEquals(0.50, config.counterLevel2BaseRatio);
 		assertEquals(1.00, config.counterLevel3BaseRatio);
-		assertEquals(0.6, config.counterKnockbackLevel3Base);
-		assertEquals(1.6, config.counterKnockbackLevel3FullCharge);
+		assertEquals(1.2, config.counterKnockbackLevel3Base);
+		assertEquals(3.0, config.counterKnockbackLevel3FullCharge);
 		assertTrue(rewritten.contains("\"enableShieldCharge\": true"));
 		assertTrue(rewritten.contains("\"chargeStageThreeTicks\": 60"));
+		assertTrue(rewritten.contains("\"enableShieldChargeCooldown\": true"));
+		assertTrue(rewritten.contains("\"shieldChargeCooldownLevel3\": 60"));
+		assertTrue(rewritten.contains("\"showShieldChargeStatusMessage\": true"));
 		assertTrue(rewritten.contains("\"enableShieldCounter\": true"));
-		assertTrue(rewritten.contains("\"counterKnockbackLevel3FullCharge\": 1.6"));
+		assertTrue(rewritten.contains("\"counterKnockbackLevel3FullCharge\": 3.0"));
 	}
 
 	@Test

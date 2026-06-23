@@ -129,6 +129,57 @@ public final class ShieldCounterConfigScreen {
 			.setSaveConsumer(value -> editing.chargeStageThreeTicks = value)
 			.build());
 
+		chargeCategory.addEntry(entries.startBooleanToggle(
+				Text.translatable("option.shield-counter.enable_shield_charge_cooldown"),
+				editing.enableShieldChargeCooldown
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENABLE_SHIELD_CHARGE_COOLDOWN)
+			.setTooltip(Text.translatable("option.shield-counter.enable_shield_charge_cooldown.tooltip"))
+			.setSaveConsumer(value -> editing.enableShieldChargeCooldown = value)
+			.build());
+
+		chargeCategory.addEntry(entries.startIntField(
+				Text.translatable("option.shield-counter.shield_charge_cooldown_level1"),
+				editing.shieldChargeCooldownLevel1
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL1)
+			.setMin(ShieldCounterConfig.MIN_SHIELD_CHARGE_COOLDOWN_TICKS)
+			.setMax(ShieldCounterConfig.MAX_SHIELD_CHARGE_COOLDOWN_TICKS)
+			.setTooltip(Text.translatable("option.shield-counter.shield_charge_cooldown_level1.tooltip"))
+			.setSaveConsumer(value -> editing.shieldChargeCooldownLevel1 = value)
+			.build());
+
+		chargeCategory.addEntry(entries.startIntField(
+				Text.translatable("option.shield-counter.shield_charge_cooldown_level2"),
+				editing.shieldChargeCooldownLevel2
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL2)
+			.setMin(ShieldCounterConfig.MIN_SHIELD_CHARGE_COOLDOWN_TICKS)
+			.setMax(ShieldCounterConfig.MAX_SHIELD_CHARGE_COOLDOWN_TICKS)
+			.setTooltip(Text.translatable("option.shield-counter.shield_charge_cooldown_level2.tooltip"))
+			.setSaveConsumer(value -> editing.shieldChargeCooldownLevel2 = value)
+			.build());
+
+		chargeCategory.addEntry(entries.startIntField(
+				Text.translatable("option.shield-counter.shield_charge_cooldown_level3"),
+				editing.shieldChargeCooldownLevel3
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_SHIELD_CHARGE_COOLDOWN_LEVEL3)
+			.setMin(ShieldCounterConfig.MIN_SHIELD_CHARGE_COOLDOWN_TICKS)
+			.setMax(ShieldCounterConfig.MAX_SHIELD_CHARGE_COOLDOWN_TICKS)
+			.setTooltip(Text.translatable("option.shield-counter.shield_charge_cooldown_level3.tooltip"))
+			.setSaveConsumer(value -> editing.shieldChargeCooldownLevel3 = value)
+			.build());
+
+		chargeCategory.addEntry(entries.startBooleanToggle(
+				Text.translatable("option.shield-counter.show_shield_charge_status_message"),
+				editing.showShieldChargeStatusMessage
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_SHOW_SHIELD_CHARGE_STATUS_MESSAGE)
+			.setTooltip(Text.translatable("option.shield-counter.show_shield_charge_status_message.tooltip"))
+			.setSaveConsumer(value -> editing.showShieldChargeStatusMessage = value)
+			.build());
+
 		ConfigCategory hudCategory = builder.getOrCreateCategory(
 			Text.translatable("category.shield-counter.shield_charge_hud")
 		);

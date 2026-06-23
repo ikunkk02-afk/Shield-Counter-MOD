@@ -13,6 +13,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 
 final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 	private final PlayerEntity player;
@@ -29,7 +30,53 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 
 	@Override
 	public void resetShieldCharge() {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
 		this.state.reset();
+		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+	}
+
+	@Override
+	public int getShieldChargeCooldownTicks() {
+		return this.state.getCooldownTicks();
+	}
+
+	@Override
+	public int getShieldChargeCooldownDurationTicks() {
+		return this.state.getCooldownDurationTicks();
+	}
+
+	@Override
+	public void setShieldChargeCooldown(int ticks) {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		this.state.setCooldown(ticks);
+		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+	}
+
+	@Override
+	public void resetShieldChargeCooldown() {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		this.state.resetCooldown();
+		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+	}
+
+	@Override
+	public boolean isShieldChargeOnCooldown() {
+		return this.state.isOnCooldown();
+	}
+
+	@Override
+	public void resetShieldChargeState() {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		this.state.resetAll();
+		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
 	}
 
 	@Override
@@ -38,15 +85,19 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 		boolean charging = this.player.isAlive()
 			&& this.player.isUsingItem()
 			&& this.player.getActiveItem().isOf(Items.SHIELD);
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
 		int enteredStage = this.state.update(charging, config);
 		if (enteredStage > 0 && this.player instanceof ServerPlayerEntity serverPlayer) {
-			playStageFeedback(serverPlayer, enteredStage);
+			playStageFeedback(serverPlayer, enteredStage, config);
 			ShieldCounter.LOGGER.debug(
 				"Player {} reached shield charge stage {}",
 				serverPlayer.getName().getString(),
 				enteredStage
 			);
 		}
+		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
 	}
 
 	@Override
@@ -59,7 +110,21 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 		this.state.writeToNbt(tag);
 	}
 
-	private static void playStageFeedback(ServerPlayerEntity player, int stage) {
+	private void syncIfChanged(int chargeTicks, int cooldownTicks, int cooldownDurationTicks) {
+		if (chargeTicks != this.state.getChargeTicks()
+			|| cooldownTicks != this.state.getCooldownTicks()
+			|| cooldownDurationTicks != this.state.getCooldownDurationTicks()) {
+			this.sync();
+		}
+	}
+
+	private void sync() {
+		if (this.player instanceof ServerPlayerEntity) {
+			ShieldChargeComponents.SHIELD_CHARGE.sync(this.player);
+		}
+	}
+
+	private static void playStageFeedback(ServerPlayerEntity player, int stage, ShieldCounterConfig config) {
 		ServerWorld world = player.getServerWorld();
 		SoundEvent sound;
 		float volume;
@@ -88,6 +153,9 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 				0.35D,
 				0.02D
 			);
+			if (config.showShieldChargeStatusMessage) {
+				player.sendMessage(Text.translatable("message.shield-counter.shield_charge_full"), true);
+			}
 		}
 
 		world.playSound(

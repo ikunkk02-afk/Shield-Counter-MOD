@@ -1,41 +1,25 @@
 package io.github.ikunkk02.shieldcounter.client.hud;
 
+import io.github.ikunkk02.shieldcounter.charge.ShieldChargeApi;
 import io.github.ikunkk02.shieldcounter.config.ShieldCounterConfig;
 import io.github.ikunkk02.shieldcounter.config.ShieldCounterConfigManager;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.Items;
-
 import net.minecraft.client.render.RenderTickCounter;
 
 public final class ShieldChargeHud {
-	private static int clientChargeTicks;
+	private static final int BACKGROUND_COLOR = 0xFF000000;
+	private static final int CHARGE_COLOR = 0xFF80FF20;
+	private static final int FULL_CHARGE_COLOR = 0xFFFFD700;
+	private static final int COOLDOWN_COLOR = 0xFF8A8A8A;
 
 	private ShieldChargeHud() {
 	}
 
 	public static void register() {
-		ClientTickEvents.END_CLIENT_TICK.register(ShieldChargeHud::onClientTick);
 		HudRenderCallback.EVENT.register(ShieldChargeHud::onHudRender);
-	}
-
-	private static void onClientTick(MinecraftClient client) {
-		if (client.player == null) {
-			clientChargeTicks = 0;
-			return;
-		}
-
-		ShieldCounterConfig config = ShieldCounterConfigManager.get();
-		boolean usingShield = client.player.isUsingItem()
-			&& client.player.getActiveItem().isOf(Items.SHIELD);
-
-		if (config.enableShieldCharge && usingShield) {
-			clientChargeTicks = Math.min(clientChargeTicks + 1, config.maxShieldChargeTicks);
-		} else {
-			clientChargeTicks = 0;
-		}
 	}
 
 	private static void onHudRender(DrawContext context, RenderTickCounter tickCounter) {
@@ -64,15 +48,27 @@ public final class ShieldChargeHud {
 		int x = screenWidth / 2 - barWidth / 2;
 		int y = screenHeight / 2 + yOffset;
 
-		float progress = (float) clientChargeTicks / config.maxShieldChargeTicks;
+		int cooldownTicks = ShieldChargeApi.getShieldChargeCooldownTicks(client.player);
+		int cooldownDurationTicks = ShieldChargeApi.getShieldChargeCooldownDurationTicks(client.player);
+		boolean onCooldown = cooldownTicks > 0 && cooldownDurationTicks > 0;
+		if (!config.enableShieldCharge && !onCooldown) {
+			return;
+		}
+
+		float progress;
+		int fillColor;
+		if (onCooldown) {
+			progress = 1.0F - (float) cooldownTicks / cooldownDurationTicks;
+			fillColor = COOLDOWN_COLOR;
+		} else {
+			int chargeTicks = ShieldChargeApi.getShieldChargeTicks(client.player);
+			progress = (float) chargeTicks / Math.max(1, config.chargeStageThreeTicks);
+			boolean isFull = config.getShieldChargeLevel(chargeTicks) >= 3;
+			fillColor = isFull ? FULL_CHARGE_COLOR : CHARGE_COLOR;
+		}
 		progress = Math.clamp(progress, 0.0F, 1.0F);
 
-		// Background (vanilla XP bar style: solid black)
-		context.fill(x, y, x + barWidth, y + barHeight, 0xFF000000);
-
-		// Fill bar (vanilla XP green, gold when full)
-		boolean isFull = progress >= 1.0F;
-		int fillColor = isFull ? 0xFFFFD700 : 0xFF80FF20;
+		context.fill(x, y, x + barWidth, y + barHeight, BACKGROUND_COLOR);
 		int fillWidth = Math.round(barWidth * progress);
 		if (fillWidth > 0) {
 			context.fill(x, y, x + fillWidth, y + barHeight, fillColor);

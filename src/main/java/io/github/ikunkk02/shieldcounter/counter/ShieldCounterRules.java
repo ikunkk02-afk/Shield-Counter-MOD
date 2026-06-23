@@ -37,7 +37,7 @@ public final class ShieldCounterRules {
 			return 0.0;
 		}
 		if (enchantmentLevel >= 3) {
-			return Math.clamp(config.counterLevel3BaseRatio, 0.0, 1.0);
+			return 1.0;
 		}
 
 		int stage = Math.clamp(chargeLevel, 0, 3);
@@ -51,6 +51,24 @@ public final class ShieldCounterRules {
 			chargeBonus = LEVEL_TWO_CHARGE_BONUSES[stage];
 		}
 		return Math.clamp(baseRatio + chargeBonus, 0.0, 1.0);
+	}
+
+	public static int effectiveChargeLevel(int chargeLevel, boolean chargeOnCooldown) {
+		if (chargeOnCooldown) {
+			return 0;
+		}
+		return Math.clamp(chargeLevel, 0, 3);
+	}
+
+	public static int calculateChargeCooldownTicks(
+		int enchantmentLevel,
+		int chargeLevel,
+		ShieldCounterConfig config
+	) {
+		if (effectiveChargeLevel(chargeLevel, false) < 3) {
+			return 0;
+		}
+		return config.getShieldChargeCooldownTicks(enchantmentLevel);
 	}
 
 	public static double calculateKnockback(

@@ -11,11 +11,11 @@ public final class ShieldChargeEvents {
 	public static void register() {
 		ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
 			if (entity instanceof PlayerEntity player) {
-				ShieldChargeApi.resetShieldCharge(player);
+				ShieldChargeApi.resetShieldChargeState(player);
 			}
 		});
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-			ShieldChargeApi.resetShieldCharge(handler.getPlayer())
+			ShieldChargeApi.resetShieldChargeState(handler.getPlayer())
 		);
 	}
 }

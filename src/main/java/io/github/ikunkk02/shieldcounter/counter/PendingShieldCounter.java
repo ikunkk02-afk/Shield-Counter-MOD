@@ -9,6 +9,7 @@ public record PendingShieldCounter(
 	int chargeLevel,
 	double reflectRatio,
 	double knockback,
+	int chargeCooldownTicks,
 	double durabilityMultiplier,
 	boolean consumeCharge
 ) {

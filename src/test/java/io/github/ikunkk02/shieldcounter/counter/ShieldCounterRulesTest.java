@@ -44,13 +44,36 @@ class ShieldCounterRulesTest {
 	}
 
 	@Test
-	void levelThreeAlwaysUsesTheConfiguredFullReflectRatio() {
+	void levelThreeAlwaysReflectsAllDamageAtEveryChargeStage() {
 		ShieldCounterConfig config = new ShieldCounterConfig();
 		config.counterLevel3BaseRatio = 0.8;
 
 		for (int chargeLevel = 0; chargeLevel <= 3; chargeLevel++) {
-			assertEquals(0.8, ShieldCounterRules.calculateReflectRatio(3, chargeLevel, config));
+			assertEquals(1.0, ShieldCounterRules.calculateReflectRatio(3, chargeLevel, config));
 		}
+	}
+
+	@Test
+	void cooldownForcesCounterToUseUnchargedStage() {
+		assertEquals(0, ShieldCounterRules.effectiveChargeLevel(3, true));
+		assertEquals(2, ShieldCounterRules.effectiveChargeLevel(2, false));
+		assertEquals(0, ShieldCounterRules.effectiveChargeLevel(-1, false));
+		assertEquals(3, ShieldCounterRules.effectiveChargeLevel(9, false));
+	}
+
+	@Test
+	void fullChargeCounterSelectsConfiguredChargeCooldown() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+
+		assertEquals(0, ShieldCounterRules.calculateChargeCooldownTicks(1, 0, config));
+		assertEquals(0, ShieldCounterRules.calculateChargeCooldownTicks(1, 2, config));
+		assertEquals(40, ShieldCounterRules.calculateChargeCooldownTicks(1, 3, config));
+		assertEquals(50, ShieldCounterRules.calculateChargeCooldownTicks(2, 3, config));
+		assertEquals(60, ShieldCounterRules.calculateChargeCooldownTicks(3, 3, config));
+
+		config.enableShieldChargeCooldown = false;
+
+		assertEquals(0, ShieldCounterRules.calculateChargeCooldownTicks(3, 3, config));
 	}
 
 	@Test
@@ -69,10 +92,10 @@ class ShieldCounterRulesTest {
 	void levelThreeKnockbackUsesTheDocumentedStageWeights() {
 		ShieldCounterConfig config = new ShieldCounterConfig();
 
-		assertEquals(0.6, ShieldCounterRules.calculateKnockback(3, 0, config), EPSILON);
-		assertEquals(0.9, ShieldCounterRules.calculateKnockback(3, 1, config), EPSILON);
-		assertEquals(1.2, ShieldCounterRules.calculateKnockback(3, 2, config), EPSILON);
-		assertEquals(1.6, ShieldCounterRules.calculateKnockback(3, 3, config), EPSILON);
+		assertEquals(1.2, ShieldCounterRules.calculateKnockback(3, 0, config), EPSILON);
+		assertEquals(1.74, ShieldCounterRules.calculateKnockback(3, 1, config), EPSILON);
+		assertEquals(2.28, ShieldCounterRules.calculateKnockback(3, 2, config), EPSILON);
+		assertEquals(3.0, ShieldCounterRules.calculateKnockback(3, 3, config), EPSILON);
 		assertEquals(0.0, ShieldCounterRules.calculateKnockback(2, 3, config), EPSILON);
 	}
 
