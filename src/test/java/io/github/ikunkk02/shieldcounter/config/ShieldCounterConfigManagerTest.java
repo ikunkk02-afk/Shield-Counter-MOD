@@ -82,6 +82,20 @@ class ShieldCounterConfigManagerTest {
 		assertEquals(1.00, config.counterLevel3BaseRatio);
 		assertEquals(1.2, config.counterKnockbackLevel3Base);
 		assertEquals(3.0, config.counterKnockbackLevel3FullCharge);
+		assertTrue(config.enableEnergyCounter);
+		assertEquals(20.0, config.energyCounterLevel1Threshold);
+		assertEquals(16.0, config.energyCounterLevel2Threshold);
+		assertEquals(12.0, config.energyCounterLevel3Threshold);
+		assertEquals(1.5, config.energyCounterLevel1Multiplier);
+		assertEquals(2.0, config.energyCounterLevel2Multiplier);
+		assertEquals(3.0, config.energyCounterLevel3Multiplier);
+		assertEquals(30.0, config.energyCounterLevel1MaxStoredDamage);
+		assertEquals(40.0, config.energyCounterLevel2MaxStoredDamage);
+		assertEquals(50.0, config.energyCounterLevel3MaxStoredDamage);
+		assertEquals(80, config.energyCounterCooldownLevel1);
+		assertEquals(100, config.energyCounterCooldownLevel2);
+		assertEquals(120, config.energyCounterCooldownLevel3);
+		assertTrue(config.showEnergyCounterMessage);
 		assertTrue(rewritten.contains("\"enableShieldCharge\": true"));
 		assertTrue(rewritten.contains("\"chargeStageThreeTicks\": 60"));
 		assertTrue(rewritten.contains("\"enableShieldChargeCooldown\": true"));
@@ -89,6 +103,9 @@ class ShieldCounterConfigManagerTest {
 		assertTrue(rewritten.contains("\"showShieldChargeStatusMessage\": true"));
 		assertTrue(rewritten.contains("\"enableShieldCounter\": true"));
 		assertTrue(rewritten.contains("\"counterKnockbackLevel3FullCharge\": 3.0"));
+		assertTrue(rewritten.contains("\"enableEnergyCounter\": true"));
+		assertTrue(rewritten.contains("\"energyCounterLevel3Multiplier\": 3.0"));
+		assertTrue(rewritten.contains("\"energyCounterCooldownLevel3\": 120"));
 	}
 
 	@Test

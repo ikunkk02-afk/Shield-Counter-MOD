@@ -320,6 +320,166 @@ public final class ShieldCounterConfigScreen {
 			.setSaveConsumer(value -> editing.counterKnockbackLevel3FullCharge = value)
 			.build());
 
+		ConfigCategory energyCategory = builder.getOrCreateCategory(
+			Text.translatable("category.shield-counter.energy_counter")
+		);
+
+		energyCategory.addEntry(entries.startBooleanToggle(
+				Text.translatable("option.shield-counter.enable_energy_counter"),
+				editing.enableEnergyCounter
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENABLE_ENERGY_COUNTER)
+			.setTooltip(Text.translatable("option.shield-counter.enable_energy_counter.tooltip"))
+			.setSaveConsumer(value -> editing.enableEnergyCounter = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level1_threshold"),
+				editing.energyCounterLevel1Threshold
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL1_THRESHOLD)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_level1_threshold.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterLevel1Threshold = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level2_threshold"),
+				editing.energyCounterLevel2Threshold
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL2_THRESHOLD)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_level2_threshold.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterLevel2Threshold = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level3_threshold"),
+				editing.energyCounterLevel3Threshold
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL3_THRESHOLD)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_level3_threshold.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterLevel3Threshold = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level1_multiplier"),
+				editing.energyCounterLevel1Multiplier
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL1_MULTIPLIER)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_MULTIPLIER)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_MULTIPLIER)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_level1_multiplier.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterLevel1Multiplier = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level2_multiplier"),
+				editing.energyCounterLevel2Multiplier
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL2_MULTIPLIER)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_MULTIPLIER)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_MULTIPLIER)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_level2_multiplier.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterLevel2Multiplier = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level3_multiplier"),
+				editing.energyCounterLevel3Multiplier
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL3_MULTIPLIER)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_MULTIPLIER)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_MULTIPLIER)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_level3_multiplier.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterLevel3Multiplier = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level1_max_stored_damage"),
+				editing.energyCounterLevel1MaxStoredDamage
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL1_MAX_STORED_DAMAGE)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setTooltip(Text.translatable(
+				"option.shield-counter.energy_counter_level1_max_stored_damage.tooltip"
+			))
+			.setSaveConsumer(value -> editing.energyCounterLevel1MaxStoredDamage = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level2_max_stored_damage"),
+				editing.energyCounterLevel2MaxStoredDamage
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL2_MAX_STORED_DAMAGE)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setTooltip(Text.translatable(
+				"option.shield-counter.energy_counter_level2_max_stored_damage.tooltip"
+			))
+			.setSaveConsumer(value -> editing.energyCounterLevel2MaxStoredDamage = value)
+			.build());
+
+		energyCategory.addEntry(entries.startDoubleField(
+				Text.translatable("option.shield-counter.energy_counter_level3_max_stored_damage"),
+				editing.energyCounterLevel3MaxStoredDamage
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_LEVEL3_MAX_STORED_DAMAGE)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_DAMAGE_VALUE)
+			.setTooltip(Text.translatable(
+				"option.shield-counter.energy_counter_level3_max_stored_damage.tooltip"
+			))
+			.setSaveConsumer(value -> editing.energyCounterLevel3MaxStoredDamage = value)
+			.build());
+
+		energyCategory.addEntry(entries.startIntField(
+				Text.translatable("option.shield-counter.energy_counter_cooldown_level1"),
+				editing.energyCounterCooldownLevel1
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL1)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_COOLDOWN_TICKS)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_COOLDOWN_TICKS)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_cooldown_level1.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterCooldownLevel1 = value)
+			.build());
+
+		energyCategory.addEntry(entries.startIntField(
+				Text.translatable("option.shield-counter.energy_counter_cooldown_level2"),
+				editing.energyCounterCooldownLevel2
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL2)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_COOLDOWN_TICKS)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_COOLDOWN_TICKS)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_cooldown_level2.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterCooldownLevel2 = value)
+			.build());
+
+		energyCategory.addEntry(entries.startIntField(
+				Text.translatable("option.shield-counter.energy_counter_cooldown_level3"),
+				editing.energyCounterCooldownLevel3
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_ENERGY_COUNTER_COOLDOWN_LEVEL3)
+			.setMin(ShieldCounterConfig.MIN_ENERGY_COUNTER_COOLDOWN_TICKS)
+			.setMax(ShieldCounterConfig.MAX_ENERGY_COUNTER_COOLDOWN_TICKS)
+			.setTooltip(Text.translatable("option.shield-counter.energy_counter_cooldown_level3.tooltip"))
+			.setSaveConsumer(value -> editing.energyCounterCooldownLevel3 = value)
+			.build());
+
+		energyCategory.addEntry(entries.startBooleanToggle(
+				Text.translatable("option.shield-counter.show_energy_counter_message"),
+				editing.showEnergyCounterMessage
+			)
+			.setDefaultValue(ShieldCounterConfig.DEFAULT_SHOW_ENERGY_COUNTER_MESSAGE)
+			.setTooltip(Text.translatable("option.shield-counter.show_energy_counter_message.tooltip"))
+			.setSaveConsumer(value -> editing.showEnergyCounterMessage = value)
+			.build());
+
 		builder.setSavingRunnable(() -> ShieldCounterConfigManager.save(editing));
 		return builder.build();
 	}

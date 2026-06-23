@@ -33,8 +33,34 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 		int chargeTicks = this.state.getChargeTicks();
 		int cooldownTicks = this.state.getCooldownTicks();
 		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
 		this.state.reset();
-		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
+	}
+
+	@Override
+	public int consumeShieldChargeForCounter(int enchantmentLevel, ShieldCounterConfig config) {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
+		int chargeLevel = this.state.consumeForCounter(enchantmentLevel, config);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
+		return chargeLevel;
 	}
 
 	@Override
@@ -52,8 +78,16 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 		int chargeTicks = this.state.getChargeTicks();
 		int cooldownTicks = this.state.getCooldownTicks();
 		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
 		this.state.setCooldown(ticks);
-		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
 	}
 
 	@Override
@@ -61,8 +95,16 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 		int chargeTicks = this.state.getChargeTicks();
 		int cooldownTicks = this.state.getCooldownTicks();
 		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
 		this.state.resetCooldown();
-		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
 	}
 
 	@Override
@@ -71,12 +113,86 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 	}
 
 	@Override
+	public float getStoredShieldDamage() {
+		return this.state.getStoredShieldDamage();
+	}
+
+	@Override
+	public void addStoredShieldDamage(float amount, float maxStoredDamage) {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
+		this.state.addStoredShieldDamage(amount, maxStoredDamage);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
+	}
+
+	@Override
+	public void resetStoredShieldDamage() {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
+		this.state.resetStoredShieldDamage();
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
+	}
+
+	@Override
+	public int getEnergyCounterCooldownTicks() {
+		return this.state.getEnergyCounterCooldownTicks();
+	}
+
+	@Override
+	public void setEnergyCounterCooldown(int ticks) {
+		int chargeTicks = this.state.getChargeTicks();
+		int cooldownTicks = this.state.getCooldownTicks();
+		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
+		this.state.setEnergyCounterCooldown(ticks);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
+	}
+
+	@Override
+	public boolean isEnergyCounterOnCooldown() {
+		return this.state.isEnergyCounterOnCooldown();
+	}
+
+	@Override
 	public void resetShieldChargeState() {
 		int chargeTicks = this.state.getChargeTicks();
 		int cooldownTicks = this.state.getCooldownTicks();
 		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
 		this.state.resetAll();
-		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
 	}
 
 	@Override
@@ -88,6 +204,8 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 		int chargeTicks = this.state.getChargeTicks();
 		int cooldownTicks = this.state.getCooldownTicks();
 		int cooldownDurationTicks = this.state.getCooldownDurationTicks();
+		float storedShieldDamage = this.state.getStoredShieldDamage();
+		int energyCounterCooldownTicks = this.state.getEnergyCounterCooldownTicks();
 		int enteredStage = this.state.update(charging, config);
 		if (enteredStage > 0 && this.player instanceof ServerPlayerEntity serverPlayer) {
 			playStageFeedback(serverPlayer, enteredStage, config);
@@ -97,7 +215,13 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 				enteredStage
 			);
 		}
-		this.syncIfChanged(chargeTicks, cooldownTicks, cooldownDurationTicks);
+		this.syncIfChanged(
+			chargeTicks,
+			cooldownTicks,
+			cooldownDurationTicks,
+			storedShieldDamage,
+			energyCounterCooldownTicks
+		);
 	}
 
 	@Override
@@ -110,10 +234,18 @@ final class PlayerShieldChargeComponent implements ShieldChargeComponent {
 		this.state.writeToNbt(tag);
 	}
 
-	private void syncIfChanged(int chargeTicks, int cooldownTicks, int cooldownDurationTicks) {
+	private void syncIfChanged(
+		int chargeTicks,
+		int cooldownTicks,
+		int cooldownDurationTicks,
+		float storedShieldDamage,
+		int energyCounterCooldownTicks
+	) {
 		if (chargeTicks != this.state.getChargeTicks()
 			|| cooldownTicks != this.state.getCooldownTicks()
-			|| cooldownDurationTicks != this.state.getCooldownDurationTicks()) {
+			|| cooldownDurationTicks != this.state.getCooldownDurationTicks()
+			|| Float.compare(storedShieldDamage, this.state.getStoredShieldDamage()) != 0
+			|| energyCounterCooldownTicks != this.state.getEnergyCounterCooldownTicks()) {
 			this.sync();
 		}
 	}

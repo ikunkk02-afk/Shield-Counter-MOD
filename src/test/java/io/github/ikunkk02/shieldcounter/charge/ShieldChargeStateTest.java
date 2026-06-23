@@ -90,6 +90,43 @@ class ShieldChargeStateTest {
 	}
 
 	@Test
+	void fullChargeCounterConsumptionStartsCooldownImmediately() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+		ShieldChargeState state = new ShieldChargeState();
+
+		for (int i = 0; i < config.chargeStageThreeTicks; i++) {
+			state.update(true, config);
+		}
+
+		assertEquals(3, config.getShieldChargeLevel(state.getChargeTicks()));
+
+		assertEquals(3, state.consumeForCounter(2, config));
+		assertEquals(0, state.getChargeTicks());
+		assertEquals(50, state.getCooldownTicks());
+		assertEquals(50, state.getCooldownDurationTicks());
+
+		assertEquals(0, state.consumeForCounter(2, config));
+		assertEquals(50, state.getCooldownTicks());
+	}
+
+	@Test
+	void partialChargeCounterConsumptionClearsChargeWithoutCooldown() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+		ShieldChargeState state = new ShieldChargeState();
+
+		for (int i = 0; i < config.chargeStageOneTicks; i++) {
+			state.update(true, config);
+		}
+
+		assertEquals(1, config.getShieldChargeLevel(state.getChargeTicks()));
+
+		assertEquals(1, state.consumeForCounter(1, config));
+		assertEquals(0, state.getChargeTicks());
+		assertEquals(0, state.getCooldownTicks());
+		assertEquals(0, state.getCooldownDurationTicks());
+	}
+
+	@Test
 	void releasingShieldClearsChargeWithoutStartingCooldown() {
 		ShieldCounterConfig config = new ShieldCounterConfig();
 		ShieldChargeState state = new ShieldChargeState();
@@ -118,6 +155,44 @@ class ShieldChargeStateTest {
 		assertEquals(0, state.getCooldownTicks());
 		assertEquals(0, state.getCooldownDurationTicks());
 		assertFalse(state.isOnCooldown());
+	}
+
+	@Test
+	void storesShieldDamageAndClampsToConfiguredMaximum() {
+		ShieldChargeState state = new ShieldChargeState();
+
+		state.addStoredShieldDamage(10.0F, 30.0F);
+		state.addStoredShieldDamage(50.0F, 30.0F);
+
+		assertEquals(30.0F, state.getStoredShieldDamage());
+
+		state.resetStoredShieldDamage();
+
+		assertEquals(0.0F, state.getStoredShieldDamage());
+	}
+
+	@Test
+	void energyCounterCooldownTicksDownAndBlocksStorage() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+		ShieldChargeState state = new ShieldChargeState();
+		state.addStoredShieldDamage(10.0F, 30.0F);
+		state.setEnergyCounterCooldown(3);
+
+		assertTrue(state.isEnergyCounterOnCooldown());
+		assertEquals(3, state.getEnergyCounterCooldownTicks());
+		assertEquals(0.0F, state.getStoredShieldDamage());
+
+		state.addStoredShieldDamage(10.0F, 30.0F);
+		assertEquals(0.0F, state.getStoredShieldDamage());
+
+		state.update(false, config);
+		assertEquals(2, state.getEnergyCounterCooldownTicks());
+		state.update(false, config);
+		state.update(false, config);
+
+		assertFalse(state.isEnergyCounterOnCooldown());
+		state.addStoredShieldDamage(10.0F, 30.0F);
+		assertEquals(10.0F, state.getStoredShieldDamage());
 	}
 
 	@Test
@@ -160,6 +235,35 @@ class ShieldChargeStateTest {
 
 		assertEquals(ShieldCounterConfig.MAX_SHIELD_CHARGE_COOLDOWN_TICKS, restored.getCooldownTicks());
 		assertEquals(ShieldCounterConfig.MAX_SHIELD_CHARGE_COOLDOWN_TICKS, restored.getCooldownDurationTicks());
+	}
+
+	@Test
+	void nbtRoundTripPreservesEnergyCounterStateWithinSupportedRange() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+		ShieldChargeState original = new ShieldChargeState();
+		original.addStoredShieldDamage(18.0F, 50.0F);
+
+		NbtCompound nbt = new NbtCompound();
+		original.writeToNbt(nbt);
+		ShieldChargeState restored = new ShieldChargeState();
+		restored.readFromNbt(nbt, config);
+
+		assertEquals(18.0F, restored.getStoredShieldDamage());
+		assertEquals(0, restored.getEnergyCounterCooldownTicks());
+
+		nbt.putFloat(ShieldChargeState.STORED_SHIELD_DAMAGE_NBT_KEY, 500.0F);
+		nbt.putInt(ShieldChargeState.ENERGY_COUNTER_COOLDOWN_NBT_KEY, 0);
+		restored.readFromNbt(nbt, config);
+
+		assertEquals(50.0F, restored.getStoredShieldDamage());
+
+		nbt.putFloat(ShieldChargeState.STORED_SHIELD_DAMAGE_NBT_KEY, 25.0F);
+		nbt.putInt(ShieldChargeState.ENERGY_COUNTER_COOLDOWN_NBT_KEY, 500);
+		restored.readFromNbt(nbt, config);
+
+		assertEquals(0.0F, restored.getStoredShieldDamage());
+		assertEquals(ShieldCounterConfig.MAX_ENERGY_COUNTER_COOLDOWN_TICKS,
+			restored.getEnergyCounterCooldownTicks());
 	}
 
 	@Test

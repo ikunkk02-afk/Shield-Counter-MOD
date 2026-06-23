@@ -35,9 +35,8 @@ public final class ShieldChargeHud {
 
 		boolean usingShield = client.player.isUsingItem()
 			&& client.player.getActiveItem().isOf(Items.SHIELD);
-		if (!usingShield) {
-			return;
-		}
+		boolean holdingShield = client.player.getMainHandStack().isOf(Items.SHIELD)
+			|| client.player.getOffHandStack().isOf(Items.SHIELD);
 
 		int screenWidth = client.getWindow().getScaledWidth();
 		int screenHeight = client.getWindow().getScaledHeight();
@@ -51,6 +50,9 @@ public final class ShieldChargeHud {
 		int cooldownTicks = ShieldChargeApi.getShieldChargeCooldownTicks(client.player);
 		int cooldownDurationTicks = ShieldChargeApi.getShieldChargeCooldownDurationTicks(client.player);
 		boolean onCooldown = cooldownTicks > 0 && cooldownDurationTicks > 0;
+		if (!usingShield && !(onCooldown && holdingShield)) {
+			return;
+		}
 		if (!config.enableShieldCharge && !onCooldown) {
 			return;
 		}
