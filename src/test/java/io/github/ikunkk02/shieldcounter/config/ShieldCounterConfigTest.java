@@ -21,6 +21,14 @@ class ShieldCounterConfigTest {
 		assertEquals(20, config.chargeStageOneTicks);
 		assertEquals(40, config.chargeStageTwoTicks);
 		assertEquals(60, config.chargeStageThreeTicks);
+		assertTrue(config.enableShieldCounter);
+		assertTrue(config.consumeChargeOnCounter);
+		assertEquals(1.0, config.counterDurabilityCostMultiplier);
+		assertEquals(0.25, config.counterLevel1BaseRatio);
+		assertEquals(0.50, config.counterLevel2BaseRatio);
+		assertEquals(1.00, config.counterLevel3BaseRatio);
+		assertEquals(0.6, config.counterKnockbackLevel3Base);
+		assertEquals(1.6, config.counterKnockbackLevel3FullCharge);
 	}
 
 	@Test
@@ -112,11 +120,37 @@ class ShieldCounterConfigTest {
 		ShieldCounterConfig config = new ShieldCounterConfig();
 		config.fallDamageReduction = Double.NaN;
 		config.durabilityCostMultiplier = Double.POSITIVE_INFINITY;
+		config.counterDurabilityCostMultiplier = Double.NaN;
+		config.counterLevel1BaseRatio = Double.NEGATIVE_INFINITY;
+		config.counterKnockbackLevel3FullCharge = Double.POSITIVE_INFINITY;
 
 		ShieldCounterConfig validated = config.validatedCopy();
 
 		assertEquals(0.5, validated.fallDamageReduction);
 		assertEquals(1.0, validated.durabilityCostMultiplier);
+		assertEquals(1.0, validated.counterDurabilityCostMultiplier);
+		assertEquals(0.25, validated.counterLevel1BaseRatio);
+		assertEquals(1.6, validated.counterKnockbackLevel3FullCharge);
+	}
+
+	@Test
+	void validationClampsShieldCounterValues() {
+		ShieldCounterConfig config = new ShieldCounterConfig();
+		config.counterDurabilityCostMultiplier = 9.0;
+		config.counterLevel1BaseRatio = -1.0;
+		config.counterLevel2BaseRatio = 2.0;
+		config.counterLevel3BaseRatio = 5.0;
+		config.counterKnockbackLevel3Base = -1.0;
+		config.counterKnockbackLevel3FullCharge = 9.0;
+
+		ShieldCounterConfig validated = config.validatedCopy();
+
+		assertEquals(5.0, validated.counterDurabilityCostMultiplier);
+		assertEquals(0.0, validated.counterLevel1BaseRatio);
+		assertEquals(1.0, validated.counterLevel2BaseRatio);
+		assertEquals(1.0, validated.counterLevel3BaseRatio);
+		assertEquals(0.0, validated.counterKnockbackLevel3Base);
+		assertEquals(5.0, validated.counterKnockbackLevel3FullCharge);
 	}
 
 	@Test

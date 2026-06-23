@@ -20,6 +20,30 @@ public class ShieldCounterConfig {
 	public static final int DEFAULT_CHARGE_STAGE_TWO_TICKS = 40;
 	public static final int DEFAULT_CHARGE_STAGE_THREE_TICKS = 60;
 	public static final int MIN_CHARGE_STAGE_TICKS = 1;
+	public static final boolean DEFAULT_ENABLE_SHIELD_CHARGE_HUD = true;
+	public static final int DEFAULT_SHIELD_CHARGE_HUD_Y_OFFSET = 14;
+	public static final int MIN_SHIELD_CHARGE_HUD_Y_OFFSET = 0;
+	public static final int MAX_SHIELD_CHARGE_HUD_Y_OFFSET = 100;
+	public static final int DEFAULT_SHIELD_CHARGE_HUD_WIDTH = 60;
+	public static final int MIN_SHIELD_CHARGE_HUD_WIDTH = 40;
+	public static final int MAX_SHIELD_CHARGE_HUD_WIDTH = 200;
+	public static final int DEFAULT_SHIELD_CHARGE_HUD_HEIGHT = 4;
+	public static final int MIN_SHIELD_CHARGE_HUD_HEIGHT = 3;
+	public static final int MAX_SHIELD_CHARGE_HUD_HEIGHT = 20;
+	public static final boolean DEFAULT_ENABLE_SHIELD_COUNTER = true;
+	public static final boolean DEFAULT_CONSUME_CHARGE_ON_COUNTER = true;
+	public static final double DEFAULT_COUNTER_DURABILITY_COST_MULTIPLIER = 1.0;
+	public static final double MIN_COUNTER_DURABILITY_COST_MULTIPLIER = 0.0;
+	public static final double MAX_COUNTER_DURABILITY_COST_MULTIPLIER = 5.0;
+	public static final double DEFAULT_COUNTER_LEVEL1_BASE_RATIO = 0.25;
+	public static final double DEFAULT_COUNTER_LEVEL2_BASE_RATIO = 0.50;
+	public static final double DEFAULT_COUNTER_LEVEL3_BASE_RATIO = 1.00;
+	public static final double MIN_COUNTER_RATIO = 0.0;
+	public static final double MAX_COUNTER_RATIO = 1.0;
+	public static final double DEFAULT_COUNTER_KNOCKBACK_LEVEL3_BASE = 0.6;
+	public static final double DEFAULT_COUNTER_KNOCKBACK_LEVEL3_FULL_CHARGE = 1.6;
+	public static final double MIN_COUNTER_KNOCKBACK = 0.0;
+	public static final double MAX_COUNTER_KNOCKBACK = 5.0;
 
 	public boolean enableFallShieldBlock = DEFAULT_ENABLE_FALL_SHIELD_BLOCK;
 	public double fallDamageReduction = DEFAULT_FALL_DAMAGE_REDUCTION;
@@ -31,6 +55,18 @@ public class ShieldCounterConfig {
 	public int chargeStageOneTicks = DEFAULT_CHARGE_STAGE_ONE_TICKS;
 	public int chargeStageTwoTicks = DEFAULT_CHARGE_STAGE_TWO_TICKS;
 	public int chargeStageThreeTicks = DEFAULT_CHARGE_STAGE_THREE_TICKS;
+	public boolean enableShieldChargeHud = DEFAULT_ENABLE_SHIELD_CHARGE_HUD;
+	public int shieldChargeHudYOffset = DEFAULT_SHIELD_CHARGE_HUD_Y_OFFSET;
+	public int shieldChargeHudWidth = DEFAULT_SHIELD_CHARGE_HUD_WIDTH;
+	public int shieldChargeHudHeight = DEFAULT_SHIELD_CHARGE_HUD_HEIGHT;
+	public boolean enableShieldCounter = DEFAULT_ENABLE_SHIELD_COUNTER;
+	public boolean consumeChargeOnCounter = DEFAULT_CONSUME_CHARGE_ON_COUNTER;
+	public double counterDurabilityCostMultiplier = DEFAULT_COUNTER_DURABILITY_COST_MULTIPLIER;
+	public double counterLevel1BaseRatio = DEFAULT_COUNTER_LEVEL1_BASE_RATIO;
+	public double counterLevel2BaseRatio = DEFAULT_COUNTER_LEVEL2_BASE_RATIO;
+	public double counterLevel3BaseRatio = DEFAULT_COUNTER_LEVEL3_BASE_RATIO;
+	public double counterKnockbackLevel3Base = DEFAULT_COUNTER_KNOCKBACK_LEVEL3_BASE;
+	public double counterKnockbackLevel3FullCharge = DEFAULT_COUNTER_KNOCKBACK_LEVEL3_FULL_CHARGE;
 
 	public ShieldCounterConfig validatedCopy() {
 		ShieldCounterConfig validated = new ShieldCounterConfig();
@@ -73,6 +109,60 @@ public class ShieldCounterConfig {
 			this.chargeStageThreeTicks,
 			validated.chargeStageTwoTicks + 1,
 			validated.maxShieldChargeTicks
+		);
+		validated.enableShieldChargeHud = this.enableShieldChargeHud;
+		validated.shieldChargeHudYOffset = Math.clamp(
+			this.shieldChargeHudYOffset,
+			MIN_SHIELD_CHARGE_HUD_Y_OFFSET,
+			MAX_SHIELD_CHARGE_HUD_Y_OFFSET
+		);
+		validated.shieldChargeHudWidth = Math.clamp(
+			this.shieldChargeHudWidth,
+			MIN_SHIELD_CHARGE_HUD_WIDTH,
+			MAX_SHIELD_CHARGE_HUD_WIDTH
+		);
+		validated.shieldChargeHudHeight = Math.clamp(
+			this.shieldChargeHudHeight,
+			MIN_SHIELD_CHARGE_HUD_HEIGHT,
+			MAX_SHIELD_CHARGE_HUD_HEIGHT
+		);
+		validated.enableShieldCounter = this.enableShieldCounter;
+		validated.consumeChargeOnCounter = this.consumeChargeOnCounter;
+		validated.counterDurabilityCostMultiplier = validateFiniteRange(
+			this.counterDurabilityCostMultiplier,
+			DEFAULT_COUNTER_DURABILITY_COST_MULTIPLIER,
+			MIN_COUNTER_DURABILITY_COST_MULTIPLIER,
+			MAX_COUNTER_DURABILITY_COST_MULTIPLIER
+		);
+		validated.counterLevel1BaseRatio = validateFiniteRange(
+			this.counterLevel1BaseRatio,
+			DEFAULT_COUNTER_LEVEL1_BASE_RATIO,
+			MIN_COUNTER_RATIO,
+			MAX_COUNTER_RATIO
+		);
+		validated.counterLevel2BaseRatio = validateFiniteRange(
+			this.counterLevel2BaseRatio,
+			DEFAULT_COUNTER_LEVEL2_BASE_RATIO,
+			MIN_COUNTER_RATIO,
+			MAX_COUNTER_RATIO
+		);
+		validated.counterLevel3BaseRatio = validateFiniteRange(
+			this.counterLevel3BaseRatio,
+			DEFAULT_COUNTER_LEVEL3_BASE_RATIO,
+			MIN_COUNTER_RATIO,
+			MAX_COUNTER_RATIO
+		);
+		validated.counterKnockbackLevel3Base = validateFiniteRange(
+			this.counterKnockbackLevel3Base,
+			DEFAULT_COUNTER_KNOCKBACK_LEVEL3_BASE,
+			MIN_COUNTER_KNOCKBACK,
+			MAX_COUNTER_KNOCKBACK
+		);
+		validated.counterKnockbackLevel3FullCharge = validateFiniteRange(
+			this.counterKnockbackLevel3FullCharge,
+			DEFAULT_COUNTER_KNOCKBACK_LEVEL3_FULL_CHARGE,
+			MIN_COUNTER_KNOCKBACK,
+			MAX_COUNTER_KNOCKBACK
 		);
 		return validated;
 	}

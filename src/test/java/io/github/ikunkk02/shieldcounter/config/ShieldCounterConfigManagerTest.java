@@ -69,8 +69,18 @@ class ShieldCounterConfigManagerTest {
 		assertEquals(20, config.chargeStageOneTicks);
 		assertEquals(40, config.chargeStageTwoTicks);
 		assertEquals(60, config.chargeStageThreeTicks);
+		assertTrue(config.enableShieldCounter);
+		assertTrue(config.consumeChargeOnCounter);
+		assertEquals(1.0, config.counterDurabilityCostMultiplier);
+		assertEquals(0.25, config.counterLevel1BaseRatio);
+		assertEquals(0.50, config.counterLevel2BaseRatio);
+		assertEquals(1.00, config.counterLevel3BaseRatio);
+		assertEquals(0.6, config.counterKnockbackLevel3Base);
+		assertEquals(1.6, config.counterKnockbackLevel3FullCharge);
 		assertTrue(rewritten.contains("\"enableShieldCharge\": true"));
 		assertTrue(rewritten.contains("\"chargeStageThreeTicks\": 60"));
+		assertTrue(rewritten.contains("\"enableShieldCounter\": true"));
+		assertTrue(rewritten.contains("\"counterKnockbackLevel3FullCharge\": 1.6"));
 	}
 
 	@Test

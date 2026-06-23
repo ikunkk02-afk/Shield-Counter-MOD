@@ -3,7 +3,8 @@
 	"package": "io.github.ikunkk02.shieldcounter.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"PlayerEntityMixin"
+		"PlayerEntityMixin",
+		"ShieldBlockMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
