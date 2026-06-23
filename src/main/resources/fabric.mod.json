@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "shield-counter",
+	"version": "${version}",
+	"name": "Shield Counter",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/shield-counter/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.ikunkk02.shieldcounter.ShieldCounter"
+		],
+		"client": [
+			"io.github.ikunkk02.shieldcounter.client.ShieldCounterClient"
+		],
+		"fabric-datagen": [
+			"io.github.ikunkk02.shieldcounter.client.ShieldCounterDataGenerator"
+		]
+	},
+	"mixins": [
+		"shield-counter.mixins.json",
+		{
+			"config": "shield-counter.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
