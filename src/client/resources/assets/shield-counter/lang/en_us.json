@@ -95,6 +95,7 @@
 	"message.shield-counter.energy_counter_burst": "Energy burst!",
 	"enchantment.shield-counter.shield_counter": "Shield Counter",
 	"enchantment.shield-counter.energy_counter": "Energy Counter",
+	"subtitles.shield-counter.counter_trigger": "Counter trigger",
 	"death.attack.shield_reflect": "%1$s was killed by their own reflected attack",
 	"death.attack.shield_reflect.player": "%1$s was killed by %2$s's shield counter"
 }

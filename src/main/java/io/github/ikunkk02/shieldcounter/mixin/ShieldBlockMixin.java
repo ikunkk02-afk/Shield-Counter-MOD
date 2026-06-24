@@ -9,6 +9,7 @@ import io.github.ikunkk02.shieldcounter.counter.ShieldCounterPlayerAccess;
 import io.github.ikunkk02.shieldcounter.counter.ShieldCounterRules;
 import io.github.ikunkk02.shieldcounter.damage.ModDamageTypes;
 import io.github.ikunkk02.shieldcounter.enchantment.ModEnchantments;
+import io.github.ikunkk02.shieldcounter.sound.ModSounds;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
@@ -22,7 +23,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import java.util.Locale;
@@ -190,10 +190,10 @@ public abstract class ShieldBlockMixin {
 				player.getX(),
 				player.getY(),
 				player.getZ(),
-				SoundEvents.BLOCK_ANVIL_LAND,
+				ModSounds.COUNTER_TRIGGER,
 				SoundCategory.PLAYERS,
-				0.4F,
-				1.6F
+				1.0F,
+				1.0F
 			);
 			shieldCounter$applyChargedCounterFeedback(serverWorld, player, pendingCounter);
 
@@ -253,16 +253,6 @@ public abstract class ShieldBlockMixin {
 				0.5D,
 				0.4D,
 				0.05D
-			);
-			serverWorld.playSound(
-				null,
-				player.getX(),
-				player.getY(),
-				player.getZ(),
-				SoundEvents.ENTITY_PLAYER_LEVELUP,
-				SoundCategory.PLAYERS,
-				0.8F,
-				1.35F
 			);
 		}
 
@@ -331,10 +321,10 @@ public abstract class ShieldBlockMixin {
 			player.getX(),
 			player.getY(),
 			player.getZ(),
-			burst ? SoundEvents.ENTITY_PLAYER_LEVELUP : SoundEvents.BLOCK_ANVIL_LAND,
+			ModSounds.COUNTER_TRIGGER,
 			SoundCategory.PLAYERS,
-			burst ? 0.95F : 0.65F,
-			burst ? 0.8F : 1.25F
+			1.0F,
+			1.0F
 		);
 
 		if (config.showEnergyCounterMessage) {

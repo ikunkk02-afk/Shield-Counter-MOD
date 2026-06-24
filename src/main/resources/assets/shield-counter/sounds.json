@@ -1,0 +1,11 @@
+{
+  "counter_trigger": {
+    "subtitle": "subtitles.shield-counter.counter_trigger",
+    "sounds": [
+      {
+        "name": "shield-counter:counter_trigger",
+        "stream": false
+      }
+    ]
+  }
+}

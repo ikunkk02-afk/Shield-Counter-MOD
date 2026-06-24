@@ -81,6 +81,21 @@ class ShieldCounterResourcesTest {
 		assertEquals("minecraft:shield", tag.getAsJsonArray("values").get(0).getAsString());
 	}
 
+	@Test
+	void customCounterTriggerSoundIsDeclaredAndPackaged() throws IOException {
+		JsonObject sounds = readJson(
+			RESOURCES.resolve("assets/shield-counter/sounds.json")
+		);
+		JsonObject counterTrigger = sounds.getAsJsonObject("counter_trigger");
+
+		assertEquals("subtitles.shield-counter.counter_trigger",
+			counterTrigger.get("subtitle").getAsString());
+		assertEquals("shield-counter:counter_trigger",
+			counterTrigger.getAsJsonArray("sounds").get(0).getAsJsonObject().get("name").getAsString());
+		assertFalse(counterTrigger.getAsJsonArray("sounds").get(0).getAsJsonObject().get("stream").getAsBoolean());
+		assertTrue(Files.exists(RESOURCES.resolve("assets/shield-counter/sounds/counter_trigger.ogg")));
+	}
+
 	private static JsonObject readJson(Path path) throws IOException {
 		return JsonParser.parseString(Files.readString(path)).getAsJsonObject();
 	}
