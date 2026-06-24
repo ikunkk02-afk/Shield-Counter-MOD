@@ -56,6 +56,20 @@ class ShieldCounterResourcesTest {
 	}
 
 	@Test
+	void enchantmentIsAvailableInTheEnchantingTablePool() throws IOException {
+		JsonObject tag = readJson(
+			RESOURCES.resolve("data/minecraft/tags/enchantment/in_enchanting_table.json")
+		);
+
+		assertTrue(tag.getAsJsonArray("values").contains(
+			JsonParser.parseString("\"shield-counter:shield_counter\"")
+		));
+		assertTrue(tag.getAsJsonArray("values").contains(
+			JsonParser.parseString("\"shield-counter:energy_counter\"")
+		));
+	}
+
+	@Test
 	void reflectedDamageBypassesShieldsAndUsesTheCorrectDamageTypeId() throws IOException {
 		JsonObject tag = readJson(
 			RESOURCES.resolve("data/minecraft/tags/damage_type/bypasses_shield.json")
@@ -82,18 +96,42 @@ class ShieldCounterResourcesTest {
 	}
 
 	@Test
-	void customCounterTriggerSoundIsDeclaredAndPackaged() throws IOException {
+	void shieldEnchantingTableMixinsAreRegistered() throws IOException {
+		JsonObject mixins = readJson(RESOURCES.resolve("shield-counter.mixins.json"));
+		JsonArray commonMixins = mixins.getAsJsonArray("mixins");
+
+		assertTrue(commonMixins.contains(JsonParser.parseString("\"ItemEnchantabilityMixin\"")));
+		assertTrue(commonMixins.contains(JsonParser.parseString("\"ItemStackEnchantingMixin\"")));
+		assertFalse(commonMixins.contains(JsonParser.parseString("\"ShieldItemEnchantabilityMixin\"")));
+	}
+
+	@Test
+	void customCounterTriggerSoundsAreDeclaredAndPackaged() throws IOException {
 		JsonObject sounds = readJson(
 			RESOURCES.resolve("assets/shield-counter/sounds.json")
 		);
-		JsonObject counterTrigger = sounds.getAsJsonObject("counter_trigger");
 
-		assertEquals("subtitles.shield-counter.counter_trigger",
-			counterTrigger.get("subtitle").getAsString());
-		assertEquals("shield-counter:counter_trigger",
-			counterTrigger.getAsJsonArray("sounds").get(0).getAsJsonObject().get("name").getAsString());
-		assertFalse(counterTrigger.getAsJsonArray("sounds").get(0).getAsJsonObject().get("stream").getAsBoolean());
-		assertTrue(Files.exists(RESOURCES.resolve("assets/shield-counter/sounds/counter_trigger.ogg")));
+		assertSoundExists(sounds, "counter_trigger", "subtitles.shield-counter.counter_trigger", null);
+		assertSoundExists(sounds, "energy_counter_trigger",
+			"subtitles.shield-counter.energy_counter_trigger", 0.5D);
+	}
+
+	private static void assertSoundExists(
+		JsonObject sounds,
+		String soundId,
+		String subtitleKey,
+		Double expectedVolume
+	) {
+		JsonObject sound = sounds.getAsJsonObject(soundId);
+		JsonObject entry = sound.getAsJsonArray("sounds").get(0).getAsJsonObject();
+
+		assertEquals(subtitleKey, sound.get("subtitle").getAsString());
+		assertEquals("shield-counter:" + soundId, entry.get("name").getAsString());
+		assertFalse(entry.get("stream").getAsBoolean());
+		if (expectedVolume != null) {
+			assertEquals(expectedVolume, entry.get("volume").getAsDouble());
+		}
+		assertTrue(Files.exists(RESOURCES.resolve("assets/shield-counter/sounds/" + soundId + ".ogg")));
 	}
 
 	private static JsonObject readJson(Path path) throws IOException {

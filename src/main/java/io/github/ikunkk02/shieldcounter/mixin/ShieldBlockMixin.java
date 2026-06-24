@@ -321,7 +321,7 @@ public abstract class ShieldBlockMixin {
 			player.getX(),
 			player.getY(),
 			player.getZ(),
-			ModSounds.COUNTER_TRIGGER,
+			ModSounds.ENERGY_COUNTER_TRIGGER,
 			SoundCategory.PLAYERS,
 			1.0F,
 			1.0F

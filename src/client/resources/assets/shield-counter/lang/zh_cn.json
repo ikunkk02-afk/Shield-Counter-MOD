@@ -97,6 +97,7 @@
 	"enchantment.shield-counter.shield_counter": "盾反",
 	"enchantment.shield-counter.energy_counter": "蓄能",
 	"subtitles.shield-counter.counter_trigger": "反击触发",
+	"subtitles.shield-counter.energy_counter_trigger": "蓄能触发",
 	"death.attack.shield_reflect": "%1$s 被自己的攻击反噬",
 	"death.attack.shield_reflect.player": "%1$s 被 %2$s 的盾牌反噬"
 }

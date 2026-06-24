@@ -3,6 +3,8 @@
 	"package": "io.github.ikunkk02.shieldcounter.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"ItemEnchantabilityMixin",
+		"ItemStackEnchantingMixin",
 		"PlayerEntityMixin",
 		"ShieldBlockMixin"
 	],
